@@ -1,0 +1,3531 @@
+<!DOCTYPE html>
+<!--
+ ============================================================
+   AETHER NEXUS
+   An all-in-one artist's digital atelier.
+
+   Copyright (c) 2026 Quincy Washington / Stellaris Solutions
+   A Division of Albanus Design.
+   All Rights Reserved.
+
+   This source code, its design, the Cosmic palette engine,
+   the rite system, the arcane sigil, and all related original
+   creative work are the exclusive property of the author.
+
+   No portion of this file may be copied, reproduced,
+   redistributed, sublicensed, sold, modified, or used to
+   create derivative works without prior written permission.
+   Inspection of source for educational study is permitted.
+   Commercial use, rebranding, or republication is prohibited.
+
+   For licensing inquiries, see the in-app Commissions page.
+ ============================================================
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Aether Nexus, by Albanus Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Marcellus&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ CONFIG NOTE ============
+   To enable real Google Sign-In, set GOOGLE_CLIENT_ID in the script below
+   and add this page's domain to your Google Cloud OAuth "Authorized origins".
+   With no client ID, "Continue with Google" falls back to a name prompt. */
+
+/* ============ TOKENS ============ */
+:root{
+  /* deep teal-night ground — from the firefly forest, darkest as base */
+  --void:#051a26; --ink:#082837; --ink2:#0a3040; --card:#0c3344;
+  --card2:#114052; --raise:#17506333;
+  --edge:rgba(245,215,110,.22); --edge-soft:rgba(200,241,235,.10);
+  /* firefly gold — primary accent (var names kept for compatibility) */
+  --gold:#f5d76e; --gold-bright:#ffe89a; --gold-deep:#c9a23a;
+  /* dusty blue — secondary accent (var names kept for compatibility) */
+  --arcane:#447ca4; --arcane-bright:#6fa3c8;
+  /* support hues */
+  --eldritch:#4f9693; --crimson:#447ca4; --blood:#0a3040;
+  --parch:#dff2ef; --parch-dim:#9bc2c4; --parch-faint:#5e8590;
+  --ok:#4f9693;
+  /* ember sparks — firefly gold & sage */
+  --ember-cyan:#4f9693; --ember-mag:#f5d76e; --ember-violet:#c8f1eb;
+  --necro:#c8f1eb;
+  --sh:0 22px 60px -18px rgba(0,0,0,.92);
+  /* arcane engine — firefly forest: teal-night, ice, sage, gold */
+  --ar-line:#dff2ef; --ar-dim:rgba(223,242,239,.42);
+  --ar-red:#4f9693; --ar-gold:#f5d76e;
+  /* sage as a named tertiary for the new world */
+  --sage:#4f9693; --ice:#c8f1eb; --dusk:#447ca4;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:var(--void); color:var(--parch);
+  font-family:'EB Garamond',Georgia,serif; font-size:17px; line-height:1.6;
+  overflow-x:hidden; -webkit-font-smoothing:antialiased;
+}
+::selection{background:rgba(111,163,200,.4);color:#fff}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:var(--ink)}
+::-webkit-scrollbar-thumb{background:#114052;border-radius:6px}
+::-webkit-scrollbar-thumb:hover{background:#52181f}
+
+h1,h2,h3,h4{font-family:'Cinzel',serif;font-weight:700;line-height:1.18;letter-spacing:.02em}
+.disp{font-family:'Cinzel Decorative',serif;font-weight:900}
+.mono{font-family:'DM Mono',monospace;letter-spacing:.04em}
+.kicker{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.34em;
+  text-transform:uppercase;color:var(--gold-deep)}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+a{color:var(--gold);text-decoration:none}
+input,textarea,select{font-family:inherit}
+
+/* scrollbar */
+#starfield{position:fixed;inset:0;z-index:0;pointer-events:none}
+#starfield .star{position:absolute;border-radius:50%;background:#fff;
+  animation:tw var(--d,4s) ease-in-out infinite;animation-delay:var(--dl,0s)}
+@keyframes tw{0%,100%{opacity:.1;transform:scale(.7)}50%{opacity:.8;transform:scale(1)}}
+#vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse 80% 70% at 50% 40%,transparent 34%,rgba(5,26,38,.6) 76%,rgba(5,26,38,.97) 100%)}
+#grain{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay}
+.aura{position:fixed;border-radius:50%;filter:blur(120px);z-index:0;pointer-events:none;opacity:.32}
+.aura.a1{width:520px;height:520px;background:#6e1420;top:-190px;left:-150px}
+.aura.a2{width:460px;height:460px;background:#7a142e;bottom:-200px;right:-160px;opacity:.26}
+
+/* ============ APP SHELL ============ */
+#app-root{position:relative;z-index:5;min-height:100%}
+.view{display:none}
+/* faint sigil watermark behind every app page */
+.app-watermark{position:fixed;left:50%;top:52%;width:min(150vw,1100px);
+  height:min(150vw,1100px);transform:translate(-50%,-50%);
+  z-index:0;pointer-events:none;opacity:.045;
+  display:grid;place-items:center;overflow:hidden}
+.app-watermark svg{width:100%;height:100%}
+.app-watermark .gc-orbit,.app-watermark .ar-outer,.app-watermark .ar-text,
+.app-watermark .ar-nodes,.app-watermark .ar-geo,.app-watermark .ar-core,
+.app-watermark .gc-tickspin,.app-watermark .gc-sigspin-a,
+.app-watermark .gc-sigspin-b,.app-watermark .gc-sigspin-c,
+.app-watermark .gc-lobe-a,.app-watermark .gc-lobe-b,.app-watermark .gc-lobe-c{
+  opacity:1;animation:none}
+.app-watermark,.app-watermark *{pointer-events:none!important}
+.app-watermark .ar-energy,.app-watermark .ar-energy2{animation:none;opacity:.6}
+.app-watermark .gc-spin-slow{animation:spinCW 240s linear infinite}
+#mainapp #topbar{z-index:40}
+#mainapp #nav{z-index:39}
+#mainapp .view{position:relative;z-index:2}
+.view.active{display:block;animation:viewIn .5s ease both}
+@keyframes viewIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+
+/* ============ LANDING — THE SUMMONING ============ */
+#landing{position:relative;min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:46px 22px;
+  overflow:hidden;background:radial-gradient(ellipse 64% 54% at 50% 44%,#082837,#070406 70%)}
+
+/* drifting embers */
+#embers{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+.ember{position:absolute;bottom:-6%;border-radius:50%;background:var(--ec);
+  box-shadow:0 0 7px 1px var(--ec);
+  animation:emberUp var(--ed) linear infinite;animation-delay:var(--edl)}
+@keyframes emberUp{
+  0%{transform:translate(0,0) scale(1);opacity:0}
+  10%{opacity:.8}70%{opacity:.4}
+  100%{transform:translate(var(--edx),-114vh) scale(.35);opacity:0}}
+
+/* ground fog */
+.ground-fog{position:absolute;left:0;right:0;bottom:0;height:40%;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(120,18,30,.16) 55%,rgba(46,8,14,.55) 82%,rgba(8,4,6,.9))}
+
+/* emblem */
+.emblem-stage{position:relative;z-index:3;width:clamp(252px,72vw,380px);
+  aspect-ratio:500 / 412;display:grid;place-items:center;margin-bottom:84px}
+.emblem-aura{position:absolute;left:50%;top:61.2%;width:144%;height:144%;
+  transform:translate(-50%,-50%);border-radius:50%;opacity:0;
+  background:radial-gradient(circle,rgba(79,150,147,.26),rgba(68,124,164,.13) 46%,transparent 70%);
+  animation:auraWake 1.4s 3.0s ease forwards,auraPulse 5.5s 4.4s ease-in-out infinite}
+@keyframes auraWake{to{opacity:1}}
+@keyframes auraPulse{0%,100%{transform:translate(-50%,-50%) scale(.96);opacity:.7}
+  50%{transform:translate(-50%,-50%) scale(1.08);opacity:1}}
+.emblem-stage svg{position:relative;width:100%;height:100%;overflow:visible}
+
+/* death-magic explosion bloom */
+.death-bloom{position:absolute;left:50%;top:61.2%;width:180%;height:180%;
+  transform:translate(-50%,-50%);border-radius:50%;z-index:2;opacity:0;
+  background:radial-gradient(circle,rgba(255,252,245,.96) 0%,rgba(245,215,110,.6) 22%,rgba(79,150,147,.4) 44%,rgba(68,124,164,.18) 60%,transparent 74%);
+  animation:bloom 1.7s 2.15s ease-out forwards}
+@keyframes bloom{0%{opacity:0;transform:translate(-50%,-50%) scale(.18)}
+  18%{opacity:.95}100%{opacity:0;transform:translate(-50%,-50%) scale(1.9)}}
+.shockwave{position:absolute;left:50%;top:61.2%;width:60px;height:60px;
+  transform:translate(-50%,-50%);border-radius:50%;z-index:2;
+  border:2px solid rgba(232,200,120,.92);opacity:0;
+  animation:shock 1.5s 2.2s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes shock{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}
+  14%{opacity:.9}100%{opacity:0;transform:translate(-50%,-50%) scale(7)}}
+
+/* ============ THE ARCANE ENGINE — landing emblem ============ */
+/* black · white · red · gold — intricate concentric magic circle,
+   six independently counter-rotating layers. */
+.ar-line{fill:none;stroke:var(--ar-line);stroke-width:1.6;
+  filter:drop-shadow(0 0 3px rgba(236,228,207,.5))}
+.ar-line-dim{fill:none;stroke:var(--ar-dim);stroke-width:1.1}
+.ar-hair{fill:none;stroke:var(--ar-dim);stroke-width:.9}
+.ar-tick{stroke:var(--ar-dim);stroke-width:1.4;stroke-linecap:round}
+
+.ar-energy{fill:none;stroke:var(--ar-red);stroke-width:1.5;opacity:0;
+  filter:drop-shadow(0 0 5px rgba(79,150,147,.9)) drop-shadow(0 0 13px rgba(79,150,147,.5));
+  animation:arFade 1.4s 1.2s ease forwards,arRedPulse 4.6s 2.6s ease-in-out infinite}
+.ar-energy2{fill:none;stroke:var(--ar-red);stroke-width:1.3;opacity:0;
+  filter:drop-shadow(0 0 4px rgba(79,150,147,.8));
+  animation:arFade 1.4s 1.7s ease forwards,arRedPulse 4.6s 3.1s ease-in-out infinite}
+@keyframes arRedPulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+.ar-incant{fill:var(--ar-line);font-family:'Cinzel',serif;font-weight:600;
+  font-size:9.3px;letter-spacing:3px;
+  filter:drop-shadow(0 0 2px rgba(236,228,207,.55))}
+.ar-incant-sm{font-size:6.8px;letter-spacing:2.2px;fill:var(--ar-dim)}
+
+.ar-nodecirc{fill:rgba(5,26,38,.65);stroke:var(--ar-gold);stroke-width:1.3}
+.ar-dot{fill:var(--ar-red);filter:drop-shadow(0 0 4px rgba(79,150,147,.95))}
+.ar-sym{fill:none;stroke:var(--ar-gold);stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.ar-symf{fill:var(--ar-gold);stroke:none}
+.ar-node{filter:drop-shadow(0 0 4px rgba(245,215,110,.7))}
+
+.ar-geo-line{fill:none;stroke:var(--ar-line);stroke-width:1.5;stroke-linejoin:round;
+  filter:drop-shadow(0 0 4px rgba(79,150,147,.55))}
+.ar-gold-line{fill:none;stroke:var(--ar-gold);stroke-width:1.5;stroke-linejoin:round;
+  filter:drop-shadow(0 0 5px rgba(245,215,110,.75))}
+
+.ar-star8{fill:none;stroke:var(--ar-line);stroke-width:1.5;stroke-linejoin:round;
+  filter:drop-shadow(0 0 5px rgba(236,228,207,.7))}
+.ar-star4{fill:var(--ar-gold);stroke:none;
+  filter:drop-shadow(0 0 6px rgba(245,215,110,.9))}
+.ar-coredot{fill:var(--ar-red);filter:drop-shadow(0 0 6px rgba(79,150,147,1))}
+
+/* the six rotating layers — each fades in on summon, then turns forever.
+   neighbouring rings spin opposite ways. */
+.ar-outer,.ar-text,.ar-nodes,.ar-geo,.ar-core{
+  transform-box:view-box;opacity:0}
+.ar-outer{animation:arFade 1.3s .2s ease forwards,spinCCW 150s .2s linear infinite}
+.ar-text {animation:arFade 1.3s .9s ease forwards,spinCW 108s .9s linear infinite}
+.ar-nodes{animation:arFade 1.3s 1.5s ease forwards,spinCCW 88s 1.5s linear infinite}
+.ar-geo  {animation:arFade 1.3s 2.0s ease forwards,spinCCW 41s 2.0s linear infinite}
+.ar-core {animation:arFade 1.1s 2.7s ease forwards,spinCW 120s 2.7s linear infinite}
+@keyframes arFade{to{opacity:1}}
+@keyframes spinCW{to{transform:rotate(360deg)}}
+@keyframes spinCCW{to{transform:rotate(-360deg)}}
+
+/* the three lesser circles — fade in late, after the great circle */
+.gc-lobe,.gc-lobe-b,.gc-lobe-c{transform-box:view-box;opacity:0}
+.gc-lobe-a{animation:arFade 1s 3.0s ease forwards}
+.gc-lobe-b{animation:arFade 1s 3.3s ease forwards}
+.gc-lobe-c{animation:arFade 1s 3.6s ease forwards}
+/* the lobe trio orbits slowly around the great circle */
+.gc-orbit{transform-box:view-box;transform-origin:250px 230px;
+  animation:spinCW 80s 3.0s linear infinite}
+/* fast inner spins — sigils and ticks within each lesser circle */
+.gc-tickspin{transform-box:view-box}
+.gc-lobe-a .gc-tickspin{animation:spinCCW 16s linear infinite}
+.gc-lobe-b .gc-tickspin{animation:spinCW 16s linear infinite}
+.gc-lobe-c .gc-tickspin{animation:spinCCW 16s linear infinite}
+.gc-sigspin-a,.gc-sigspin-b,.gc-sigspin-c{transform-box:view-box}
+.gc-sigspin-a{animation:spinCW 2.3s linear infinite}
+.gc-sigspin-b{animation:spinCCW 2s linear infinite}
+.gc-sigspin-c{animation:spinCW 2.2s linear infinite}
+/* golden discipline marks inside the lesser circles */
+.gc-disc{color:var(--ar-gold);fill:none;stroke:var(--ar-gold);stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round;
+  filter:drop-shadow(0 0 3px rgba(245,215,110,.85))}
+
+/* title — austere carve-in */
+.brand-title{position:relative;z-index:3;opacity:0;
+  animation:carve 1.5s 3.05s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes carve{
+  0%{opacity:0;letter-spacing:.7em;filter:blur(10px) brightness(2)}
+  100%{opacity:1;letter-spacing:.2em;filter:blur(0) brightness(1)}}
+.brand-title .disp{font-family:'Marcellus',serif;font-weight:400;
+  text-transform:uppercase;
+  font-size:clamp(36px,8.6vw,64px);line-height:1;letter-spacing:.2em;
+  text-indent:.2em;
+  background:linear-gradient(180deg,#fbf7ec,#e6d6a8 55%,#caa044);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 2px 16px rgba(79,150,147,.4)) drop-shadow(0 0 28px rgba(245,215,110,.3))}
+.title-rule{width:0;height:1px;margin:16px auto 0;z-index:3;position:relative;
+  background:linear-gradient(90deg,transparent,var(--ar-gold),var(--ar-red),var(--ar-gold),transparent);
+  animation:ruleGrow 1s 3.5s ease forwards}
+@keyframes ruleGrow{to{width:min(320px,72vw)}}
+.brand-sub{position:relative;z-index:3;margin-top:13px;opacity:0;
+  animation:fadeUp .9s 3.65s ease both}
+.brand-sub .kicker{letter-spacing:.46em;color:var(--parch-dim)}
+.tag-line{position:relative;z-index:3;font-style:italic;color:#b9b0a0;margin-top:9px;
+  font-size:16px;opacity:0;animation:fadeUp .9s 3.8s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+.enter-stack{position:relative;z-index:3;margin-top:36px;display:flex;
+  flex-direction:column;gap:12px;width:100%;max-width:340px;opacity:0;
+  animation:fadeUp 1s 4.0s ease both}
+.rune-btn{display:flex;align-items:center;justify-content:center;gap:11px;
+  padding:16px 24px;border-radius:5px;font-family:'Cinzel',serif;font-weight:600;
+  font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;transition:.3s;
+  background:linear-gradient(180deg,rgba(30,26,46,.92),rgba(13,11,22,.96));
+  border:1px solid rgba(111,163,200,.3);color:var(--parch);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 10px 32px -14px rgba(0,0,0,.95)}
+.rune-btn:hover{border-color:var(--ember-cyan);color:#fff;transform:translateY(-2px);
+  box-shadow:0 0 26px -4px rgba(195,59,221,.4),inset 0 0 20px -10px rgba(195,59,221,.4)}
+.rune-btn.primary{border-color:rgba(255,67,81,.4)}
+.rune-btn.primary:hover{border-color:var(--ember-mag);
+  box-shadow:0 0 30px -4px rgba(255,67,81,.45),inset 0 0 20px -10px rgba(255,67,81,.4)}
+.rune-btn .gl{font-size:14px;color:var(--ember-violet)}
+.btn-g-icon{width:17px;height:17px;flex:none}
+.landing-foot{position:relative;z-index:3;margin-top:auto;padding-top:46px;opacity:0;
+  animation:fadeUp 1.1s 4.2s ease both}
+.landing-foot p{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;
+  color:var(--parch-faint);text-transform:uppercase;line-height:1.95}
+.landing-foot p b{color:var(--parch-dim);font-weight:500}
+
+/* ============ TOPBAR ============ */
+#topbar{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);
+  background:linear-gradient(180deg,rgba(10,9,18,.97),rgba(10,9,18,.8));
+  border-bottom:1px solid var(--edge-soft)}
+.topbar-in{max-width:1080px;margin:0 auto;padding:11px 22px;
+  display:flex;align-items:center;gap:14px}
+.tb-sigil{width:34px;height:34px;flex:none}
+.tb-sigil .hm-spin{transform-origin:100px 100px;animation:spinCW 60s linear infinite}
+.tb-name{font-family:'Cinzel',serif;font-weight:700;font-size:14px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gold-bright)}
+.tb-name span{color:var(--parch-faint);display:block;font-size:8.5px;letter-spacing:.3em;font-weight:500}
+.tb-rank{margin-left:auto;display:flex;align-items:center;gap:9px;
+  background:rgba(162,75,214,.1);border:1px solid rgba(162,75,214,.28);
+  padding:6px 12px;border-radius:10px}
+.tb-rank .rk-glyph{font-size:15px}
+.tb-rank .rk-txt{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em}
+.tb-rank .rk-txt b{display:block;font-family:'EB Garamond',serif;font-style:italic;
+  font-weight:600;color:var(--gold-bright);font-size:13.5px;letter-spacing:.01em;
+  line-height:1.2}
+.tb-rank .rk-txt span{color:var(--parch-faint)}
+
+/* ============ NAV ============ */
+#nav{position:sticky;top:57px;z-index:39;backdrop-filter:blur(14px);
+  background:rgba(8,7,14,.92);border-bottom:1px solid var(--edge-soft)}
+.nav-in{max-width:1080px;margin:0 auto;padding:0 12px;display:flex;
+  gap:2px;overflow-x:auto;scrollbar-width:none}
+.nav-in::-webkit-scrollbar{display:none}
+.nav-tab{padding:14px 17px;font-family:'Cinzel',serif;font-weight:600;font-size:12px;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--parch-faint);
+  white-space:nowrap;border-bottom:2px solid transparent;transition:.2s}
+.nav-tab:hover{color:var(--parch-dim)}
+.nav-tab.on{color:var(--gold-bright);border-bottom-color:var(--gold)}
+
+/* ============ PAGE HEAD ============ */
+.phead{padding:42px 0 26px}
+.phead .kicker{display:block;margin-bottom:11px}
+.phead h2{font-size:clamp(26px,5vw,38px);
+  background:linear-gradient(180deg,var(--parch),#b9b09a);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.phead p{color:var(--parch-dim);margin-top:9px;max-width:620px;font-size:16.5px}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--edge),transparent);margin:8px 0}
+
+/* ============ CARDS ============ */
+.panel{background:linear-gradient(165deg,var(--card2),var(--card));
+  border:1px solid var(--edge-soft);border-radius:16px;padding:22px;
+  position:relative;box-shadow:var(--sh)}
+.panel.gilt{border-color:var(--edge)}
+.corner{position:absolute;width:13px;height:13px;border:1.5px solid var(--gold-deep);opacity:.55}
+.corner.tl{top:8px;left:8px;border-right:none;border-bottom:none}
+.corner.tr{top:8px;right:8px;border-left:none;border-bottom:none}
+.corner.bl{bottom:8px;left:8px;border-right:none;border-top:none}
+.corner.br{bottom:8px;right:8px;border-left:none;border-top:none}
+.panel-title{font-size:13px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gold);display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.panel-title .gl{font-size:17px}
+/* unified line-art UI icons */
+.ui-ic{width:1.15em;height:1.15em;display:inline-block;vertical-align:-.18em}
+.panel-title .ui-ic{width:18px;height:18px;color:var(--gold)}
+.rune-btn .ui-ic{width:17px;height:17px}
+.mini-btn .ui-ic{width:15px;height:15px;vertical-align:-.22em}
+.nav-tab .ui-ic{width:15px;height:15px;margin-right:5px}
+.about-row .ar-gl .ui-ic{width:22px;height:22px}
+.tb-rank .rk-glyph .ui-ic{width:16px;height:16px}
+.empty-state .es-gl .ui-ic{width:38px;height:38px}
+.thanks .tk-gl .ui-ic{width:46px;height:46px}
+
+/* ============ OBSERVATORY ============ */
+.obs-grid{display:grid;gap:18px;grid-template-columns:1fr}
+@media(min-width:760px){.obs-grid{grid-template-columns:1fr 1fr}
+  .obs-grid .span2{grid-column:1/-1}}
+.rank-hero{display:flex;flex-wrap:wrap;gap:20px;align-items:center}
+.rank-orb{width:96px;height:96px;flex:none;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 38% 32%,#0c3344,#051a26);
+  border:1px solid rgba(162,75,214,.4);position:relative}
+.rank-orb::before{content:"";position:absolute;inset:-7px;border-radius:50%;
+  border:1px dashed rgba(209,31,51,.3);animation:emSpin 40s linear infinite}
+.rank-orb .rn{font-family:'Cinzel',serif;font-weight:900;font-size:34px;color:var(--gold-bright);line-height:1}
+.rank-orb .rl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.2em;color:var(--parch-faint)}
+.rank-meta h3{font-size:22px;color:var(--parch)}
+.rank-meta .title-tag{font-family:'EB Garamond',serif;font-style:italic;
+  font-weight:600;color:var(--gold-bright);font-size:17px;letter-spacing:.01em}
+.rank-stats{display:flex;gap:22px;margin-top:12px;flex-wrap:wrap}
+.rank-stats .rs{font-family:'DM Mono',monospace}
+.rank-stats .rs b{display:block;font-size:19px;color:var(--gold-bright);font-weight:500}
+.rank-stats .rs span{font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--parch-faint)}
+
+.mood-input-row{display:flex;gap:8px;margin:14px 0}
+.mood-input-row input{flex:1;background:var(--ink);border:1px solid var(--edge-soft);
+  border-radius:10px;padding:12px 14px;color:var(--parch);font-size:16px}
+.mood-input-row input:focus{outline:none;border-color:var(--gold)}
+.mini-btn{padding:11px 16px;border-radius:10px;font-family:'Cinzel',serif;font-weight:600;
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  background:linear-gradient(180deg,#f3cf73,#c89230);color:#1a1206;transition:.2s}
+.mini-btn:hover{transform:translateY(-2px)}
+.mini-btn.alt{background:rgba(162,75,214,.16);color:var(--arcane-bright);
+  border:1px solid rgba(162,75,214,.35)}
+.mood-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.mood-chip{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.05em;
+  padding:5px 10px;border-radius:20px;background:rgba(255,255,255,.04);
+  border:1px solid var(--edge-soft);color:var(--parch-dim);transition:.18s}
+.mood-chip:hover{border-color:var(--gold);color:var(--gold-bright)}
+.palette-note{font-family:'EB Garamond',serif;font-style:italic;font-size:12.5px;
+  color:var(--parch-faint);margin-top:9px;line-height:1.5}
+.palette-out{margin-top:8px}
+.palette-name{font-family:'Cinzel',serif;font-weight:700;font-size:15px;
+  color:var(--gold-bright);margin-bottom:9px;letter-spacing:.05em}
+.swatches{display:flex;border-radius:11px;overflow:hidden;border:1px solid var(--edge-soft)}
+.sw{flex:1;height:78px;display:flex;align-items:flex-end;justify-content:center;
+  padding-bottom:7px;cursor:pointer;transition:.18s;position:relative}
+.sw:hover{flex:1.5}
+.sw span{font-family:'DM Mono',monospace;font-size:9px;background:rgba(0,0,0,.55);
+  padding:2px 6px;border-radius:5px;color:#fff;opacity:0;transition:.18s}
+.sw:hover span{opacity:1}
+.swatch-hint{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--parch-faint);
+  margin-top:8px;letter-spacing:.05em}
+
+/* ---- Chromatology ---- */
+.chroma-disclaimer{font-family:'EB Garamond',serif;font-style:italic;
+  font-size:12px;color:var(--parch-faint);margin-top:8px}
+/* API key chip + modal */
+.key-chip{display:flex;align-items:center;gap:5px;padding:5px 10px;
+  border-radius:7px;background:var(--ink);border:1px solid var(--edge-soft);
+  color:var(--gold-deep);font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.2s}
+.key-chip:hover{border-color:var(--gold);color:var(--gold-bright)}
+.key-chip .ui-ic{width:12px;height:12px}
+.key-saved{font-family:'DM Mono',monospace;font-size:11px;color:var(--ok);
+  margin-top:7px;min-height:14px}
+.key-saved:empty{display:none}
+/* Audiochroma — live listening */
+.aud-listen-btn.recording{background:var(--ar-red,#4f9693);color:#fff;
+  animation:listenPulse 1.1s ease-in-out infinite}
+@keyframes listenPulse{0%,100%{box-shadow:0 0 0 0 rgba(79,150,147,.5)}
+  50%{box-shadow:0 0 0 9px rgba(79,150,147,0)}}
+.ac-swatches{display:grid;grid-template-columns:repeat(4,1fr);
+  grid-template-rows:repeat(2,1fr);gap:0;height:170px;width:100%;
+  border-radius:14px;overflow:hidden;border:1px solid var(--edge-soft);
+  background:var(--void);margin-top:22px}
+.ac-swatch{transition:background-color .85s cubic-bezier(.25,.8,.25,1)}
+.ac-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;
+  margin-top:18px;padding:12px;border-radius:11px;background:var(--ink);
+  border:1px solid var(--edge-soft);text-align:center;
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;
+  color:var(--gold-deep)}
+.ac-stats span{display:block;color:var(--parch);font-size:14px;margin-top:3px}
+.ac-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.ac-actions input{flex:1;min-width:160px;background:var(--ink);
+  border:1px solid var(--edge-soft);border-radius:9px;padding:11px 13px;
+  color:var(--parch);font-family:'EB Garamond',serif;font-size:14px}
+.ac-actions input:focus{outline:none;border-color:var(--gold)}
+.ac-actions .mini-btn{flex:none}
+.ac-actions .mini-btn:disabled{opacity:.4;pointer-events:none}
+.ac-history{margin-top:16px;background:var(--ink);
+  border:1px solid var(--edge-soft);border-radius:12px;padding:13px}
+.ac-history-head{font-family:'DM Mono',monospace;font-size:10px;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--gold-deep);
+  margin-bottom:9px}
+.ac-history-list{display:flex;flex-direction:column;gap:8px;max-height:230px;
+  overflow-y:auto}
+.ac-history-empty{font-family:'EB Garamond',serif;font-style:italic;
+  font-size:13px;color:var(--parch-faint);text-align:center;padding:14px 0}
+.ac-hist-row{display:flex;flex-direction:column;gap:9px;padding:11px 13px;
+  background:var(--card);border:1px solid var(--edge-soft);border-radius:10px}
+.ac-hist-top{display:flex;align-items:baseline;gap:8px;min-width:0}
+.ac-hist-bot{display:flex;align-items:center;gap:10px}
+.ac-hist-artist{font-family:'EB Garamond',serif;font-style:italic;
+  font-weight:500;font-size:12px;color:var(--gold-deep);
+  letter-spacing:.02em;flex:none;max-width:42%;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.ac-hist-song{font-family:'EB Garamond',serif;font-style:italic;
+  font-size:13.5px;color:var(--parch);overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;flex:1;min-width:0}
+.ac-hist-strip{display:grid;grid-template-columns:repeat(4,1fr);
+  grid-template-rows:repeat(2,1fr);gap:0;height:42px;flex:1;
+  border-radius:7px;overflow:hidden;border:1px solid rgba(0,0,0,.4)}
+.ac-hist-strip div{width:100%;height:100%}
+.ac-hist-del{flex:none;width:24px;height:24px;border:0;border-radius:6px;
+  background:transparent;color:var(--parch-faint);cursor:pointer;
+  display:grid;place-items:center}
+.ac-hist-del:hover{color:var(--ar-red,#4f9693)}
+.ac-hist-del .ui-ic{width:13px;height:13px}
+.ac-hist-jpeg{flex:none;width:24px;height:24px;border:0;border-radius:6px;
+  background:transparent;color:var(--parch-faint);cursor:pointer;
+  display:grid;place-items:center}
+.ac-hist-jpeg:hover{color:var(--gold-bright)}
+.ac-hist-jpeg .ui-ic{width:13px;height:13px}
+/* The Palette Library */
+.pl-filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.pl-filter{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--parch-faint);background:var(--ink);
+  border:1px solid var(--edge-soft);border-radius:8px;padding:8px 14px;
+  cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.18s}
+.pl-filter .ui-ic{width:13px;height:13px}
+.pl-filter:hover{color:var(--parch-dim);border-color:var(--edge)}
+.pl-filter.on{color:var(--void);background:var(--gold);border-color:var(--gold);
+  font-weight:500}
+.pl-list{display:flex;flex-direction:column;gap:10px;max-height:560px;
+  overflow-y:auto}
+.pl-empty{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;
+  color:var(--parch-faint);text-align:center;padding:26px 14px;line-height:1.6}
+.pl-src{flex:none;display:grid;place-items:center;width:18px;height:18px;
+  color:var(--gold-deep)}
+.pl-src .ui-ic{width:14px;height:14px}
+.pl-note{font-family:'EB Garamond',serif;font-style:italic;font-size:12.5px;
+  color:var(--parch-dim);margin:2px 0 0 26px}
+.chroma-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;
+  margin:16px 0 14px}
+.chroma-count{display:flex;align-items:center;gap:10px;margin-left:auto}
+.chroma-count label{font-family:'DM Mono',monospace;font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--gold-deep)}
+.count-stepper{display:flex;align-items:center;gap:2px;background:var(--ink);
+  border:1px solid var(--edge-soft);border-radius:9px;padding:3px}
+.count-btn{width:30px;height:30px;border:0;border-radius:6px;background:transparent;
+  color:var(--gold-bright);font-size:18px;cursor:pointer;line-height:1;
+  transition:.15s}
+.count-btn:hover{background:var(--raise)}
+#chromaNum{min-width:34px;text-align:center;font-family:'Cinzel',serif;
+  font-weight:700;font-size:16px;color:var(--parch)}
+.chroma-stage{background:var(--ink);border:1px solid var(--edge-soft);
+  border-radius:12px;overflow:hidden;min-height:170px;display:flex}
+.chroma-empty{margin:auto;text-align:center;color:var(--parch-faint);
+  padding:34px 14px}
+.chroma-empty-ic{opacity:.4;margin-bottom:8px}
+.chroma-empty-ic .ui-ic{width:40px;height:40px}
+.chroma-empty p{font-size:13px;font-style:italic;font-family:'EB Garamond',serif}
+.chroma-stage img{width:100%;max-height:340px;object-fit:contain;display:block;
+  background:var(--void)}
+/* interactive drag-sampling picker */
+.chroma-pickwrap{position:relative;display:inline-block;max-width:100%;
+  line-height:0;touch-action:none}
+.chroma-pickimg{width:100%;max-height:340px;object-fit:contain;display:block;
+  background:var(--void);border-radius:10px;-webkit-user-select:none;user-select:none;
+  -webkit-user-drag:none;pointer-events:none}
+.chroma-dots{position:absolute;inset:0;pointer-events:none}
+.chroma-dot{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;
+  border-radius:50%;border:2.5px solid #fff;cursor:grab;pointer-events:auto;
+  box-shadow:0 0 0 1.5px rgba(0,0,0,.55),0 3px 10px rgba(0,0,0,.5);
+  display:grid;place-items:center;touch-action:none;transition:transform .1s}
+.chroma-dot span{font-family:'DM Mono',monospace;font-size:12px;font-weight:600;
+  color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.9);pointer-events:none;
+  -webkit-user-select:none;user-select:none}
+.chroma-dot.grabbing{cursor:grabbing;transform:scale(1.25);z-index:5}
+.chroma-dot:hover{transform:scale(1.12)}
+.cs-chip .cs-num{position:absolute;margin:6px 0 0 8px;
+  font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:#fff;
+  text-shadow:0 1px 3px rgba(0,0,0,.95)}
+.cs-chip{position:relative}
+.chroma-result{margin-top:14px}
+.chroma-loading{margin:auto;padding:40px;font-family:'EB Garamond',serif;
+  font-style:italic;color:var(--gold-deep)}
+.chroma-swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));
+  gap:10px}
+.cs-card{border-radius:11px;overflow:hidden;border:1px solid var(--edge-soft);
+  background:var(--ink);cursor:pointer;transition:.18s}
+.cs-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.cs-chip{height:64px}
+.cs-codes{padding:9px 10px}
+.cs-code{display:flex;justify-content:space-between;gap:8px;
+  font-family:'DM Mono',monospace;font-size:10px;line-height:1.7}
+.cs-code .ck{color:var(--gold-deep)}
+.cs-code .cv{color:var(--parch);user-select:all}
+.chroma-tip{font-family:'EB Garamond',serif;font-style:italic;font-size:12px;
+  color:var(--parch-faint);margin-top:10px;text-align:center}
+
+/* mood-board export overlay */
+.mb-export-ov{position:fixed;inset:0;z-index:90;display:none;
+  background:rgba(4,3,8,.92);padding:24px;overflow-y:auto}
+.mb-export-ov.show{display:flex;align-items:flex-start;justify-content:center;
+  animation:viewIn .3s ease both}
+.mb-export-card{background:var(--card);border:1px solid var(--edge);
+  border-radius:16px;padding:20px;max-width:520px;width:100%;margin:auto;
+  position:relative}
+.mb-export-x{position:absolute;top:12px;right:12px;width:32px;height:32px;
+  border:0;border-radius:8px;background:var(--ink);color:var(--parch-dim);
+  cursor:pointer;display:grid;place-items:center}
+.mb-export-x .ui-ic{width:15px;height:15px}
+.mb-export-title{font-family:'Cinzel',serif;font-weight:700;font-size:17px;
+  color:var(--gold-bright);margin-bottom:6px}
+.mb-export-hint{font-size:12.5px;color:var(--parch-dim);line-height:1.5;
+  margin-bottom:14px}
+.mb-export-hint b{color:var(--gold-bright)}
+.mb-export-img{width:100%;border-radius:10px;border:1px solid var(--edge-soft);
+  display:block;margin-bottom:14px}
+.mb-export-card .mini-btn{width:100%;display:flex;align-items:center;
+  justify-content:center;gap:8px;text-decoration:none}
+
+.lib-grid{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+@media(min-width:560px){.lib-grid{grid-template-columns:1fr 1fr 1fr}}
+.lib-card{display:block;background:var(--ink);border:1px solid var(--edge-soft);
+  border-radius:12px;padding:14px;transition:.2s}
+.lib-card:hover{border-color:var(--gold);transform:translateY(-3px);background:var(--ink2)}
+.lib-card .lc-tag{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--arcane-bright)}
+.lib-card .lc-name{font-family:'Cinzel',serif;font-weight:600;font-size:14px;
+  color:var(--parch);margin:5px 0 3px}
+.lib-card .lc-desc{font-size:13px;color:var(--parch-dim);line-height:1.45}
+.about-list{display:flex;flex-direction:column;gap:13px;margin-top:6px}
+.about-row{display:flex;gap:13px;align-items:flex-start}
+.about-row .ar-gl{font-size:19px;flex:none;width:30px;text-align:center;color:var(--gold)}
+.about-row .ar-t b{font-family:'Cinzel',serif;font-weight:600;color:var(--parch);font-size:15px}
+.about-row .ar-t p{font-size:14px;color:var(--parch-dim);margin-top:1px}
+
+/* ============ ATELIER / BUILD GRID ============ */
+.build-grid{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+@media(min-width:680px){.build-grid{grid-template-columns:1fr 1fr 1fr}}
+.build-card{background:linear-gradient(165deg,var(--card2),var(--card));
+  border:1px solid var(--edge-soft);border-radius:15px;padding:17px;
+  position:relative;overflow:hidden;transition:.22s;text-align:left}
+.build-card::before{content:"";position:absolute;inset:0;opacity:.13;
+  background:radial-gradient(circle at 78% 12%,var(--bc),transparent 62%);transition:.22s}
+.build-card:hover{transform:translateY(-4px);border-color:var(--bc)}
+.build-card:hover::before{opacity:.26}
+.build-card.patron{border-color:var(--gold)}
+.bc-glyph{width:30px;height:30px;color:var(--bc);filter:drop-shadow(0 0 9px var(--bc))}
+.bc-glyph svg,.node-orb svg,.bd-emblem svg,.toast .tg svg,.lock-gl svg{width:100%;height:100%;display:block}
+.bc-glyph svg{width:30px;height:30px}
+.bc-fant{font-family:'Cinzel',serif;font-weight:700;font-size:16.5px;color:var(--parch);
+  margin-top:8px;letter-spacing:.02em}
+.bc-disc{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--parch-faint);margin-top:1px}
+.bc-lvl-row{display:flex;align-items:center;gap:8px;margin-top:12px}
+.bc-lvl{font-family:'Cinzel',serif;font-weight:900;font-size:15px;color:var(--bc)}
+.bc-lvl small{font-size:8px;color:var(--parch-faint);font-weight:400;letter-spacing:.1em}
+.bc-bar{flex:1;height:5px;background:var(--ink);border-radius:4px;overflow:hidden}
+.bc-bar i{display:block;height:100%;background:var(--bc);border-radius:4px;transition:.5s}
+.patron-badge{position:absolute;top:10px;right:10px;font-family:'DM Mono',monospace;
+  font-size:8px;letter-spacing:.1em;color:var(--gold-bright);
+  background:rgba(209,31,51,.14);border:1px solid var(--edge);padding:3px 7px;border-radius:6px}
+.adv-band{margin-top:30px}
+.adv-locked{text-align:center;padding:28px;border:1px dashed rgba(162,75,214,.3);
+  border-radius:15px;background:rgba(162,75,214,.05)}
+.adv-locked .lock-gl{font-size:30px;opacity:.6}
+.adv-locked p{color:var(--parch-dim);margin-top:8px;font-style:italic}
+.adv-grid{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:620px){.adv-grid{grid-template-columns:1fr 1fr}}
+.adv-card{background:linear-gradient(165deg,#220d12,#160809);
+  border:1px solid rgba(162,75,214,.26);border-radius:14px;padding:16px}
+.adv-card .av-name{font-family:'Cinzel',serif;font-weight:700;font-size:16px;
+  color:var(--arcane-bright)}
+.adv-card .av-fuse{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.06em;
+  color:var(--gold-deep);margin:4px 0 7px}
+.adv-card .av-desc{font-size:14px;color:var(--parch-dim)}
+
+/* ============ BUILD DETAIL ============ */
+#build-detail{display:none}
+#build-detail.active{display:block;animation:viewIn .4s ease both}
+.bd-back{display:inline-flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--parch-dim);
+  padding:9px 0;margin-top:16px}
+.bd-back:hover{color:var(--gold)}
+.bd-hero{display:flex;gap:18px;align-items:center;flex-wrap:wrap;
+  padding:22px;border-radius:16px;position:relative;overflow:hidden;
+  background:linear-gradient(150deg,var(--card2),var(--card));
+  border:1px solid var(--edge-soft)}
+.bd-hero::before{content:"";position:absolute;inset:0;opacity:.2;
+  background:radial-gradient(circle at 85% 10%,var(--bc),transparent 60%)}
+.bd-emblem{width:78px;height:78px;flex:none;border-radius:50%;display:grid;place-items:center;
+  font-size:34px;color:var(--bc);background:radial-gradient(circle at 38% 32%,#0a3040,#051a26);
+  border:1px solid var(--bc);filter:drop-shadow(0 0 16px var(--bc));position:relative;z-index:1}
+.bd-emblem svg{width:44px;height:44px}
+.bd-htext{position:relative;z-index:1;flex:1;min-width:200px}
+.bd-htext .bd-disc{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--parch-faint)}
+.bd-htext h2{font-size:30px;color:var(--parch);margin:2px 0 5px}
+.bd-htext .bd-blurb{font-style:italic;color:var(--parch-dim);font-size:15px;max-width:480px}
+.bd-lvlbox{position:relative;z-index:1;text-align:center;flex:none}
+.bd-lvlbox .lvnum{font-family:'Cinzel',serif;font-weight:900;font-size:46px;
+  color:var(--bc);line-height:1;filter:drop-shadow(0 0 12px var(--bc))}
+.bd-lvlbox .lvcap{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.2em;
+  color:var(--parch-faint);text-transform:uppercase}
+.bd-xpbar{height:8px;background:var(--ink);border-radius:5px;overflow:hidden;
+  margin:18px 0 4px;border:1px solid var(--edge-soft)}
+.bd-xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--bc),var(--gold-bright));
+  border-radius:5px;transition:.6s}
+.bd-xptext{font-family:'DM Mono',monospace;font-size:10px;color:var(--parch-faint);
+  display:flex;justify-content:space-between}
+.patron-set{margin-top:14px}
+.bd-cols{display:grid;gap:20px;grid-template-columns:1fr;margin-top:22px}
+@media(min-width:820px){.bd-cols{grid-template-columns:1fr 1fr}}
+.tree{position:relative;padding-left:8px}
+.tree-node{display:flex;gap:14px;position:relative;padding-bottom:6px}
+.tree-node::before{content:"";position:absolute;left:18px;top:38px;bottom:-6px;width:2px;
+  background:var(--edge-soft)}
+.tree-node:last-child::before{display:none}
+.tree-node.lit::before{background:var(--bc);opacity:.55}
+.node-orb{width:38px;height:38px;flex:none;border-radius:50%;display:grid;place-items:center;
+  font-size:13px;font-family:'Cinzel',serif;font-weight:700;position:relative;z-index:1;
+  background:var(--ink);border:2px solid var(--raise);color:var(--parch-faint);transition:.3s}
+.node-orb svg{width:20px;height:20px}
+.node-pip{width:7px;height:7px;border-radius:50%;background:var(--parch-faint);
+  display:block;opacity:.6}
+.node-pip.next{width:9px;height:9px;background:var(--gold);opacity:1;
+  box-shadow:0 0 8px var(--gold)}
+.tree-node.lit .node-orb{border-color:var(--bc);color:var(--bc);
+  background:radial-gradient(circle,#0a3040,var(--ink));box-shadow:0 0 14px -2px var(--bc)}
+.tree-node.next .node-orb{border-color:var(--gold);color:var(--gold);
+  animation:nodePulse 2.2s ease-in-out infinite}
+@keyframes nodePulse{0%,100%{box-shadow:0 0 0 0 rgba(209,31,51,.5)}
+  50%{box-shadow:0 0 0 7px rgba(209,31,51,0)}}
+.node-body{padding-bottom:14px;flex:1}
+.node-name{font-family:'Cinzel',serif;font-weight:600;font-size:14.5px;color:var(--parch)}
+.tree-node:not(.lit) .node-name{color:var(--parch-faint)}
+.node-meta{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--parch-faint);margin:2px 0 3px}
+.tree-node.lit .node-meta{color:var(--bc)}
+.node-desc{font-size:13.5px;color:var(--parch-dim);line-height:1.45}
+.tree-node:not(.lit) .node-desc{opacity:.55}
+.ex-list{display:flex;flex-direction:column;gap:10px}
+.ex-item{background:var(--ink);border:1px solid var(--edge-soft);border-radius:12px;
+  padding:13px 14px;transition:.2s}
+.ex-item.done{border-color:rgba(127,200,80,.32);background:rgba(127,200,80,.04)}
+.ex-top{display:flex;align-items:center;gap:9px}
+.ex-type{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;
+  text-transform:uppercase;padding:3px 7px;border-radius:5px}
+.ex-type.Ideation{background:rgba(162,75,214,.16);color:var(--arcane-bright)}
+.ex-type.Drawing{background:rgba(209,31,51,.14);color:var(--gold-bright)}
+.ex-type.Study{background:rgba(86,202,189,.14);color:var(--eldritch)}
+.ex-type.Technique{background:rgba(245,215,110,.16);color:var(--gold-bright)}
+.ex-type.Composition{background:rgba(79,150,147,.16);color:var(--arcane-bright)}
+.ex-type.Mastery{background:rgba(243,207,115,.2);color:var(--gold-bright)}
+.ex-item.locked{opacity:.62}
+.ex-lock-tag{font-family:'DM Mono',monospace;font-size:10px;color:var(--parch-faint);
+  display:flex;align-items:center;gap:5px}
+.ex-lock-tag .ui-ic{width:13px;height:13px}
+/* archive */
+.arch-toggle{width:100%;margin-top:14px;padding:11px;border-radius:9px;
+  background:var(--ink);border:1px solid var(--edge-soft);color:var(--parch-dim);
+  font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;gap:8px;transition:.2s}
+.arch-toggle:hover{border-color:var(--gold);color:var(--gold-bright)}
+.arch-toggle.open{border-color:var(--edge);color:var(--gold)}
+.arch-toggle .ui-ic{width:15px;height:15px}
+.arch-list{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.arch-item{background:var(--ink);border:1px solid var(--edge-soft);
+  border-radius:9px;padding:11px 12px}
+.arch-item.fav{border-color:rgba(245,215,110,.4);background:rgba(245,215,110,.05)}
+.arch-top{display:flex;align-items:center;gap:8px}
+.arch-name{font-family:'Cinzel',serif;font-weight:600;font-size:13px;color:var(--parch-dim)}
+.arch-desc{font-size:12px;color:var(--parch-faint);margin:5px 0 8px;line-height:1.45}
+.arch-act{display:flex;gap:7px}
+.arch-btn{padding:6px 11px;border-radius:7px;font-family:'DM Mono',monospace;
+  font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;
+  background:rgba(255,255,255,.03);border:1px solid var(--edge-soft);
+  color:var(--parch-faint);transition:.2s;display:flex;align-items:center;gap:5px}
+.arch-btn .ui-ic{width:12px;height:12px}
+.arch-btn:hover{border-color:var(--gold);color:var(--gold-bright)}
+.arch-item.fav .fav-btn{color:var(--gold-bright);border-color:rgba(245,215,110,.4)}
+.arch-empty{font-family:'EB Garamond',serif;font-style:italic;font-size:12.5px;
+  color:var(--parch-faint);padding:14px 4px;text-align:center}
+.ex-name{font-family:'Cinzel',serif;font-weight:600;font-size:14px;color:var(--parch);flex:1}
+.ex-xp{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold-deep)}
+.ex-desc{font-size:13px;color:var(--parch-dim);margin:6px 0 9px}
+.ex-act{display:flex;gap:8px;align-items:center}
+.ex-btn{padding:8px 14px;border-radius:8px;font-family:'Cinzel',serif;font-weight:600;
+  font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;transition:.2s}
+.ex-btn.do{background:linear-gradient(180deg,#f3cf73,#c89230);color:#1a1206}
+.ex-btn.do:hover{transform:translateY(-2px)}
+.ex-btn.again{background:rgba(255,255,255,.04);border:1px solid var(--edge-soft);color:var(--parch-dim)}
+.ex-btn.again:hover{border-color:var(--gold);color:var(--gold-bright)}
+.ex-done-tag{font-family:'DM Mono',monospace;font-size:10px;color:var(--ok);
+  display:flex;align-items:center;gap:5px}
+
+/* ============ COMMISSIONS ============ */
+.field{margin-bottom:14px}
+.field label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--gold-deep);display:block;margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;background:var(--ink);
+  border:1px solid var(--edge-soft);border-radius:10px;padding:12px 14px;
+  color:var(--parch);font-size:15.5px}
+.field textarea{resize:vertical;min-height:78px;font-family:'EB Garamond',serif}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--gold)}
+.toggle-row{display:flex;gap:9px;flex-wrap:wrap}
+.toggle-pill{padding:9px 15px;border-radius:9px;font-family:'Cinzel',serif;font-weight:600;
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  background:rgba(255,255,255,.03);border:1px solid var(--edge-soft);color:var(--parch-dim)}
+.toggle-pill.on{background:rgba(127,200,80,.14);border-color:rgba(127,200,80,.4);color:var(--ok)}
+.toggle-pill.on.closed{background:rgba(184,50,76,.14);border-color:rgba(184,50,76,.4);color:var(--crimson)}
+.pocket-box{background:linear-gradient(150deg,#220d12,#160809);  border:1px solid rgba(245,215,110,.26);border-radius:14px;padding:18px;margin-top:6px}
+/* commission how-to strip */
+.comm-how{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:22px}
+@media(min-width:620px){.comm-how{grid-template-columns:1fr 1fr 1fr}}
+.how-step{display:flex;gap:11px;align-items:flex-start;background:var(--ink);
+  border:1px solid var(--edge-soft);border-radius:11px;padding:13px 14px;
+  font-size:12.5px;color:var(--parch-dim);line-height:1.5}
+.how-step b{color:var(--parch);font-family:'Cinzel',serif;font-size:13px}
+.how-num{flex:none;width:24px;height:24px;border-radius:50%;display:grid;
+  place-items:center;background:var(--gold);color:#1a0c05;
+  font-family:'Cinzel',serif;font-weight:700;font-size:13px}
+.step-dot{flex:none;width:22px;height:22px;border-radius:50%;display:inline-grid;
+  place-items:center;background:var(--gold);color:#1a0c05;
+  font-family:'Cinzel',serif;font-weight:700;font-size:12px;margin-right:3px}
+.pocket-link{display:flex;gap:8px;margin-top:11px}
+/* pocket site — studio terms block */
+.pk-terms{margin-bottom:20px;display:flex;flex-direction:column;gap:1px;
+  border-radius:10px;overflow:hidden;border:1px solid var(--edge-soft)}
+.pk-term{display:flex;flex-direction:column;gap:3px;padding:11px 13px;
+  background:var(--ink)}
+.pk-term-k{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--gold-deep)}
+.pk-term-v{font-size:13.5px;color:var(--parch);line-height:1.5}
+.pk-term-empty{font-style:italic;color:var(--parch-dim);font-size:14px;
+  border-left:2px solid var(--gold-deep);padding-left:12px;margin-bottom:20px}
+.pocket-link input{flex:1;background:var(--ink);border:1px solid var(--edge-soft);
+  border-radius:9px;padding:10px 12px;color:var(--arcane-bright);
+  font-family:'DM Mono',monospace;font-size:11px}
+.comm-list{display:flex;flex-direction:column;gap:12px}
+.comm-card{background:var(--card);border:1px solid var(--edge-soft);border-radius:13px;
+  padding:15px;position:relative}
+.comm-card .cc-status{position:absolute;top:13px;right:14px;font-family:'DM Mono',monospace;
+  font-size:8.5px;letter-spacing:.1em;padding:3px 8px;border-radius:6px;
+  background:rgba(209,31,51,.13);color:var(--gold-bright)}
+.comm-card .cc-name{font-family:'Cinzel',serif;font-weight:700;font-size:16px;color:var(--parch)}
+.comm-card .cc-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--parch-faint);margin:3px 0 9px}
+.comm-card .cc-body{font-size:14px;color:var(--parch-dim);border-top:1px solid var(--edge-soft);padding-top:9px}
+.comm-card .cc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.comm-card .cc-tags span{font-family:'DM Mono',monospace;font-size:9px;
+  background:rgba(255,255,255,.04);padding:3px 8px;border-radius:5px;color:var(--parch-dim)}
+.comm-card .cc-actions{display:flex;gap:8px;margin-top:11px}
+.empty-state{text-align:center;padding:36px 20px;color:var(--parch-faint)}
+.empty-state .es-gl{font-size:34px;opacity:.5}
+.empty-state p{margin-top:8px;font-style:italic}
+
+/* ============ POCKET SITE ============ */
+#pocket-view{min-height:100vh;display:none;align-items:center;justify-content:center;
+  padding:40px 20px;position:relative;z-index:5}
+#pocket-view.active{display:flex;animation:viewIn .5s ease both}
+.pocket-card{width:100%;max-width:480px}
+.pocket-head{text-align:center;margin-bottom:22px}
+.pocket-head .ph-sigil{width:62px;height:62px;margin:0 auto 12px}
+.pocket-head h2{font-size:24px;color:var(--gold-bright)}
+.pocket-head .ph-by{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;
+  color:var(--parch-faint);text-transform:uppercase;margin-top:5px}
+.pocket-head .ph-status{display:inline-block;margin-top:10px;font-family:'DM Mono',monospace;
+  font-size:10px;letter-spacing:.08em;padding:4px 12px;border-radius:20px}
+.ph-status.open{background:rgba(127,200,80,.14);color:var(--ok);border:1px solid rgba(127,200,80,.35)}
+.ph-status.closed{background:rgba(184,50,76,.14);color:var(--crimson);border:1px solid rgba(184,50,76,.35)}
+.pocket-foot{text-align:center;margin-top:20px;font-family:'DM Mono',monospace;
+  font-size:9px;letter-spacing:.13em;color:var(--parch-faint);text-transform:uppercase;line-height:1.9}
+.thanks{text-align:center;padding:30px 10px}
+.thanks .tk-gl{font-size:42px}
+.thanks h3{font-size:22px;color:var(--gold-bright);margin:10px 0 6px}
+.thanks p{color:var(--parch-dim)}
+
+/* ============ TOAST / MODAL ============ */
+#toast-stack{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);
+  z-index:90;display:flex;flex-direction:column;gap:9px;align-items:center;width:92%;max-width:420px}
+.toast{background:linear-gradient(150deg,#0a3040,#150809);
+  border:1px solid var(--edge);border-radius:11px;padding:13px 17px;
+  box-shadow:var(--sh);display:flex;gap:11px;align-items:center;width:100%;
+  animation:toastIn .4s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes toastIn{from{opacity:0;transform:translateY(24px) scale(.9)}to{opacity:1;transform:none}}
+.toast.out{animation:toastOut .35s ease forwards}
+@keyframes toastOut{to{opacity:0;transform:translateY(14px) scale(.95)}}
+.toast .tg{width:24px;height:24px;flex:none;display:grid;place-items:center;color:var(--gold-bright)}
+.toast .tt b{font-family:'Cinzel',serif;font-size:13px;color:var(--gold-bright);display:block}
+.toast .tt span{font-size:13px;color:var(--parch-dim)}
+.modal-bg{position:fixed;inset:0;z-index:80;background:rgba(4,3,8,.86);
+  backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:24px}
+.modal-bg.show{display:flex;animation:viewIn .3s ease both}
+.modal{width:100%;max-width:380px;text-align:center}
+.modal h3{font-size:21px;color:var(--gold-bright);margin-bottom:6px}
+.modal p{color:var(--parch-dim);font-size:14px;margin-bottom:16px}
+.modal input{width:100%;background:var(--ink);border:1px solid var(--edge-soft);
+  border-radius:10px;padding:13px 15px;color:var(--parch);font-size:16px;margin-bottom:13px}
+.modal input:focus{outline:none;border-color:var(--gold)}
+.login-field{text-align:left}
+.login-field label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gold-deep);display:block;margin-bottom:7px}
+.login-go{width:100%;padding:13px;display:flex;align-items:center;
+  justify-content:center;gap:8px}
+.login-hint{font-size:11px;color:var(--parch-faint);margin:9px 0 0;
+  font-style:italic;line-height:1.5;text-align:left}
+.login-or{display:flex;align-items:center;gap:12px;margin:18px 0 14px;
+  color:var(--parch-faint)}
+.login-or::before,.login-or::after{content:"";flex:1;height:1px;
+  background:var(--edge-soft)}
+.login-or span{font-family:'DM Mono',monospace;font-size:9.5px;
+  letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.login-providers{display:flex;gap:10px}
+.prov-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:9px;
+  padding:12px;border-radius:10px;background:var(--ink);
+  border:1px solid var(--edge-soft);color:var(--parch);cursor:pointer;
+  font-family:'Cinzel',serif;font-weight:600;font-size:13px;transition:.2s}
+.prov-btn:hover{border-color:var(--gold);background:var(--ink2);
+  transform:translateY(-2px)}
+.prov-ic{width:18px;height:18px;flex:none}
+.foot-app{text-align:center;padding:40px 22px 60px}
+.foot-app p{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;
+  color:var(--parch-faint);text-transform:uppercase;line-height:2}
+</style>
+</head>
+<body>
+
+<!-- atmosphere -->
+<div id="starfield"></div>
+<div class="aura a1"></div>
+<div class="aura a2"></div>
+<div id="vignette"></div>
+<div id="grain"></div>
+
+<div id="app-root">
+
+<!-- ============ LANDING — THE SUMMONING ============ -->
+<section id="landing" class="view active">
+  <div id="embers"></div>
+  <div class="ground-fog"></div>
+
+  <div class="emblem-stage">
+    <div class="emblem-aura"></div>
+    <div class="death-bloom"></div>
+    <div class="shockwave"></div>
+    <svg viewBox="0 -22 500 412" id="emblemMain"></svg>
+  </div>
+
+  <div class="brand-title"><div class="disp">Aether Nexus</div></div>
+  <div class="title-rule"></div>
+  <div class="brand-sub"><span class="kicker">All-in-One Artist's Digital Atelier</span></div>
+
+  <div class="enter-stack">
+    <button class="rune-btn primary" id="enterBtn"><span class="gl">✶</span> Enter the Atelier</button>
+  </div>
+
+  <div class="landing-foot">
+    <p><b>© 2026 Stellaris Solutions</b></p>
+    <p>A Division of Albanus Design · All Rights Reserved</p>
+  </div>
+</section>
+
+<!-- ============ MAIN APP ============ -->
+<div id="mainapp" style="display:none">
+  <div class="app-watermark" id="appWatermark" aria-hidden="true"></div>
+  <header id="topbar"><div class="topbar-in">
+    <svg class="tb-sigil" id="sigilTop" viewBox="0 0 200 200"></svg>
+    <div class="tb-name">Aether Nexus<span>by Albanus Design</span></div>
+    <div class="tb-rank" id="tbRank">
+      <span class="rk-glyph"><i data-icon="spark"></i></span>
+      <div class="rk-txt"><b id="rkTitle">Apprentice</b><span id="rkLevel">Mastery 0</span></div>
+    </div>
+  </div></header>
+
+  <nav id="nav"><div class="nav-in">
+    <button class="nav-tab on" data-view="observatory"><i data-icon="observatory"></i> The Observatory</button>
+    <button class="nav-tab" data-view="atelier"><i data-icon="atelier"></i> The Atelier</button>
+    <button class="nav-tab" data-view="commissions"><i data-icon="commissions"></i> Commissions</button>
+  </div></nav>
+
+  <!-- OBSERVATORY -->
+  <section id="view-observatory" class="view active">
+    <div class="wrap">
+      <div class="phead">
+        <span class="kicker">Welcome to the workshop</span>
+        <h2>The Observatory</h2>
+        <p>Where the working artist gathers light before the work begins. Palettes conjured from mood, a library of craft, and the measure of your ascent.</p>
+      </div>
+      <div class="obs-grid">
+        <div class="panel gilt span2">
+          <span class="corner tl"></span><span class="corner tr"></span>
+          <span class="corner bl"></span><span class="corner br"></span>
+          <div class="rank-hero">
+            <div class="rank-orb"><div><div class="rn" id="obsRankNum">0</div>
+              <div class="rl">MASTERY</div></div></div>
+            <div class="rank-meta">
+              <h3 id="obsArtistName">Wandering Artist</h3>
+              <div class="title-tag" id="obsTitle">Apprentice of the Hollow Page</div>
+              <div class="rank-stats">
+                <div class="rs"><b id="obsBuilds">0</b><span>Paths Walked</span></div>
+                <div class="rs"><b id="obsTop">·</b><span>Highest Path</span></div>
+                <div class="rs"><b id="obsEx">0</b><span>Rites Performed</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel span2">
+          <div class="panel-title"><span class="gl"><i data-icon="mood"></i></span> Chromatology</div>
+          <p style="font-size:14px;color:var(--parch-dim)">Extract a true palette from any image. Take a photo or upload one. The algorithm reads every pixel and conjures the colors within, as HEX, RGB and HSL.</p>
+          <p class="chroma-disclaimer">Please use only images you own or have the rights to use.</p>
+          <div class="chroma-controls">
+            <button class="mini-btn" id="chromaPick"><i data-icon="upload"></i> Upload or Take a Photo</button>
+            <input type="file" id="chromaFile" accept="image/*" hidden/>
+            <div class="chroma-count">
+              <label>Colors to extract</label>
+              <div class="count-stepper">
+                <button class="count-btn" id="chromaMinus">–</button>
+                <span id="chromaNum">8</span>
+                <button class="count-btn" id="chromaPlus">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="chroma-stage" id="chromaStage">
+            <div class="chroma-empty" id="chromaEmpty">
+              <div class="chroma-empty-ic"><i data-icon="mood"></i></div>
+              <p>No image yet. Upload a photo to extract its palette.</p>
+            </div>
+          </div>
+          <div class="chroma-result" id="chromaResult"></div>
+          <div class="chroma-save" id="chromaSave" style="display:none">
+            <div class="ac-actions">
+              <input type="text" id="chromaTitle" placeholder="Title" />
+            </div>
+            <div class="ac-actions">
+              <input type="text" id="chromaNote" placeholder="Note (optional)" />
+              <button class="mini-btn" id="chromaSaveBtn"><i data-icon="check"></i> Save to Library</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel span2">
+          <div class="panel-title"><span class="gl"><i data-icon="conjure"></i></span> Audiochroma</div>
+          <p style="font-size:14px;color:var(--parch-dim)">Play music aloud and let the grimoire listen. It reads the living sound (bass, voice, and shimmer) and answers in colour, shifting as the music moves.</p>
+
+          <!-- the reactive swatch row (up to 8) -->
+          <div class="ac-swatches" id="acSwatches"></div>
+
+          <!-- live analysis bar -->
+          <div class="ac-stats">
+            <div>EMBER <span id="acEnergy">0%</span></div>
+            <div>PULSE <span id="acGroove">0%</span></div>
+            <div>AETHER <span id="acChill">0%</span></div>
+          </div>
+
+          <!-- name + save -->
+          <div class="ac-actions">
+            <input type="text" id="acArtist" placeholder="Artist" />
+            <input type="text" id="acSong" placeholder="Song" />
+          </div>
+          <div class="ac-actions">
+            <button class="mini-btn" id="acSave" disabled><i data-icon="check"></i> Save Palette</button>
+            <button class="mini-btn alt" id="acJpeg" disabled><i data-icon="download"></i> Save as JPEG</button>
+          </div>
+
+          <!-- the listen control -->
+          <button class="mini-btn aud-listen-btn" id="acListen" style="width:100%;margin-top:14px">
+            <i data-icon="conjure"></i> Begin Listening</button>
+          <p class="chroma-disclaimer" id="acStatus" style="margin-top:9px;text-align:center">Requires microphone access. All analysis happens on your device.</p>
+        </div>
+        <div class="panel span2">
+          <div class="panel-title"><span class="gl"><i data-icon="board"></i></span> The Palette Library</div>
+          <p style="font-size:14px;color:var(--parch-dim);margin-bottom:14px">Every colour you have gathered, in one place. Palettes drawn from sound and from image, kept, named, and ready to use.</p>
+          <div class="pl-filters" id="plFilters">
+            <button class="pl-filter on" data-src="all">All</button>
+            <button class="pl-filter" data-src="sound"><i data-icon="conjure"></i> Sound</button>
+            <button class="pl-filter" data-src="image"><i data-icon="palette"></i> Image</button>
+          </div>
+          <div class="pl-list" id="plList">
+            <p class="pl-empty" id="plEmpty">Your library is empty. Extract a palette from a photo in Chromatology, or listen to music in Audiochromatic, then save it here.</p>
+          </div>
+        </div>
+        <div class="panel span2">
+          <div class="panel-title"><span class="gl"><i data-icon="library"></i></span> The Lending Library</div>
+          <p style="font-size:14px;color:var(--parch-dim);margin-bottom:14px">Tomes & tools for the traditional and digital artist alike.</p>
+          <div class="lib-grid" id="libGrid"></div>
+        </div>
+        <div class="panel span2">
+          <div class="panel-title"><span class="gl"><i data-icon="about"></i></span> Of Aether Nexus</div>
+          <div class="about-list">
+            <div class="about-row"><div class="ar-gl"><i data-icon="atelier"></i></div><div class="ar-t">
+              <b>The Atelier, Paths of Mastery</b>
+              <p>Twelve disciplines, each a build with its own skill tree to level 99. Perform rites, gain craft, ascend.</p></div></div>
+            <div class="about-row"><div class="ar-gl"><i data-icon="patron"></i></div><div class="ar-t">
+              <b>Cross-Training</b>
+              <p>Name a Patron Path and every rite you perform elsewhere feeds it. The masters never studied only one craft.</p></div></div>
+            <div class="about-row"><div class="ar-gl"><i data-icon="commissions"></i></div><div class="ar-t">
+              <b>Commissions & the Pocket Site</b>
+              <p>Forge a sealed request page to share anywhere, patrons reach you without ever seeing the grimoire's inner pages.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foot-app"><p>© 2026 Stellaris Solutions · A Division of Albanus Design · All Rights Reserved</p></div>
+  </section>
+
+  <!-- ATELIER -->
+  <section id="view-atelier" class="view">
+    <div class="wrap">
+      <div id="atelier-grid-view">
+        <div class="phead">
+          <span class="kicker">Choose your discipline</span>
+          <h2>The Atelier</h2>
+          <p>Twelve paths of craft, each bearing a true name and a hidden one. Walk one, or many, and watch your skill tree bloom toward level 99.</p>
+        </div>
+        <div class="build-grid" id="buildGrid"></div>
+        <div class="adv-band">
+          <div class="phead" style="padding-bottom:14px">
+            <span class="kicker">Hidden curriculum</span>
+            <h2 style="font-size:24px">Advanced Paths</h2>
+          </div>
+          <div id="advSection"></div>
+        </div>
+      </div>
+      <div id="build-detail">
+        <button class="bd-back" id="bdBack">← Return to the Atelier</button>
+        <div id="bdContent"></div>
+      </div>
+    </div>
+    <div class="foot-app"><p>© 2026 Stellaris Solutions · A Division of Albanus Design · All Rights Reserved</p></div>
+  </section>
+
+  <!-- COMMISSIONS -->
+  <section id="view-commissions" class="view">
+    <div class="wrap">
+      <div class="phead">
+        <span class="kicker">Open your doors</span>
+        <h2>Commissions</h2>
+        <p>This is where clients hire you. Set up your details once, share your personal request link, and every commission request lands in your inbox below.</p>
+      </div>
+
+      <div class="comm-how">
+        <div class="how-step"><span class="how-num">1</span><div><b>Fill in your studio details</b><br>Your name, email, rates and whether you're open for work.</div></div>
+        <div class="how-step"><span class="how-num">2</span><div><b>Copy your Pocket Site link</b><br>A private request page. Share it on Instagram, your bio, anywhere.</div></div>
+        <div class="how-step"><span class="how-num">3</span><div><b>Receive requests here</b><br>When someone fills your form, the request appears in the ledger below.</div></div>
+      </div>
+
+      <div class="obs-grid">
+        <div class="panel gilt">
+          <span class="corner tl"></span><span class="corner br"></span>
+          <div class="panel-title"><span class="step-dot">1</span> Your Studio Details</div>
+          <p style="font-size:13.5px;color:var(--parch-dim);margin-bottom:14px">Patrons see this on your request page, and replies route to your email. Fill it in, then tap Save.</p>
+          <div class="field"><label>Artist / Studio Name</label>
+            <input type="text" id="cfgName" placeholder="Stellaris Solutions"/></div>
+          <div class="field"><label>Contact Email: where requests are sent</label>
+            <input type="email" id="cfgEmail" placeholder="you@studio.com"/></div>
+          <div class="field"><label>Rates</label>
+            <input type="text" id="cfgRates" placeholder="Character art from $150 · Full illustration from $400"/></div>
+          <div class="field"><label>Turnaround Time</label>
+            <input type="text" id="cfgTurnaround" placeholder="2–3 weeks from approved sketch"/></div>
+          <div class="field"><label>Deposit Info</label>
+            <input type="text" id="cfgDeposit" placeholder="50% non-refundable deposit to begin"/></div>
+          <div class="field"><label>Terms &amp; Conditions</label>
+            <textarea id="cfgTerms" placeholder="Personal use only · revisions: 2 rounds · no AI training · commercial licensing on request"></textarea></div>
+          <div class="field"><label>Are you taking work right now?</label>
+            <div class="toggle-row">
+              <button class="toggle-pill on" data-status="open" id="stOpen">● Open for Work</button>
+              <button class="toggle-pill" data-status="closed" id="stClosed">● Closed</button>
+            </div></div>
+          <button class="mini-btn" id="cfgSave" style="width:100%;margin-top:4px">Save My Details</button>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><span class="step-dot">2</span> Share Your Request Link</div>
+          <p style="font-size:13.5px;color:var(--parch-dim)">This link opens a clean request form with only your details, clients never see the rest of your studio. Copy it and paste it wherever people find you.</p>
+          <div class="pocket-box">
+            <div style="font-family:'Cinzel',serif;font-weight:600;font-size:13px;color:var(--gold-bright)">Your Pocket Site Link</div>
+            <p style="font-size:12.5px;color:var(--parch-dim);margin-top:4px">Instagram bio, email signature, business card, anywhere people find you.</p>
+            <div class="pocket-link">
+              <input type="text" id="pocketLink" readonly/>
+              <button class="mini-btn" id="copyPocket">Copy</button>
+            </div>
+            <button class="mini-btn alt" id="previewPocket" style="width:100%;margin-top:10px">See What Clients Will See</button>
+          </div>
+        </div>
+        <div class="panel span2">
+          <div class="panel-title"><span class="step-dot">3</span> Requests You've Received
+            <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:11px;color:var(--parch-faint)" id="commCount"></span>
+          </div>
+          <div id="commListWrap" style="margin-top:12px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot-app"><p>© 2026 Stellaris Solutions · A Division of Albanus Design · All Rights Reserved</p></div>
+  </section>
+</div>
+
+<!-- ============ POCKET SITE (ISOLATED) ============ -->
+<section id="pocket-view">
+  <div class="pocket-card">
+    <div class="pocket-head">
+      <svg class="ph-sigil" id="sigilPocket" viewBox="0 0 200 200"></svg>
+      <h2 id="pkArtist">The Studio</h2>
+      <div class="ph-by">Commission Request</div>
+      <div class="ph-status open" id="pkStatus">● Open for Work</div>
+    </div>
+    <div class="panel gilt" id="pocketBody">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+      <div id="pocketForm">
+        <div id="pkTerms" class="pk-terms"></div>
+        <div class="field"><label>Your Name</label><input type="text" id="rqName"/></div>
+        <div class="field"><label>Your Email</label><input type="email" id="rqEmail"/></div>
+        <div class="field"><label>Commission Type</label>
+          <select id="rqType">
+            <option>Character Illustration</option>
+            <option>Concept Art</option>
+            <option>Portrait</option>
+            <option>Cover / Key Art</option>
+            <option>Logo / Brand Mark</option>
+            <option>Reference Sheet</option>
+            <option>Other</option>
+          </select></div>
+        <div class="field"><label>Budget Range</label>
+          <select id="rqBudget">
+            <option>Under $100</option><option>$100 – $300</option>
+            <option>$300 – $600</option><option>$600 – $1,200</option>
+            <option>$1,200+</option><option>Flexible / Discuss</option>
+          </select></div>
+        <div class="field"><label>Describe Your Vision</label>
+          <textarea id="rqBrief" placeholder="Subject, mood, references, deadline…"></textarea></div>
+        <button class="mini-btn" id="rqSubmit" style="width:100%;padding:14px"><i data-icon="commissions"></i> Send Request to the Studio</button>
+      </div>
+    </div>
+    <div class="pocket-foot">
+      <div>Powered by Aether Nexus</div>
+      <div>© 2026 Stellaris Solutions · A Division of Albanus Design</div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /app-root -->
+
+<div id="toast-stack"></div>
+<div class="modal-bg" id="nameModal"><div class="modal panel gilt">
+  <span class="corner tl"></span><span class="corner br"></span>
+  <h3>Cross the Threshold</h3>
+  <p>Choose how the grimoire shall know its keeper.</p>
+
+  <div class="login-field">
+    <label>Artist Name</label>
+    <input type="text" id="modalNameInput" placeholder="Your name or studio…"/>
+    <button class="mini-btn login-go" id="modalEnter"><i data-icon="spark"></i> Open the Grimoire</button>
+    <p class="login-hint">Your progress is saved in this browser. Clearing browser data will erase it.</p>
+  </div>
+
+  <div class="login-or"><span>or continue with</span></div>
+
+  <div class="login-providers">
+    <button class="prov-btn" id="googleLogin">
+      <svg class="prov-ic" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35.5 24 35.5c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 5.1 29.3 3.5 24 3.5 12.7 3.5 3.5 12.7 3.5 24S12.7 44.5 24 44.5 44.5 35.3 44.5 24c0-1.2-.1-2.4-.9-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 11.5 24 11.5c3 0 5.8 1.1 7.9 3l5.7-5.7C34 5.1 29.3 3.5 24 3.5 16.3 3.5 9.7 7.9 6.3 14.7z"/><path fill="#4CAF50" d="M24 44.5c5.2 0 9.9-1.9 13.4-5.1l-6.2-5.2c-2 1.5-4.6 2.5-7.2 2.5-5.2 0-9.7-3.1-11.3-7.5l-6.5 5C9.6 40.1 16.2 44.5 24 44.5z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.2 5.2c-.4.4 6.6-4.8 6.6-14.7 0-1.2-.1-2.4-.4-3.5z"/></svg>
+      Google</button>
+    <button class="prov-btn" id="appleLogin">
+      <svg class="prov-ic" viewBox="0 0 24 24" fill="#f3e6c8"><path d="M17.05 12.04c-.03-2.6 2.12-3.85 2.22-3.91-1.21-1.77-3.1-2.01-3.77-2.04-1.6-.16-3.13.94-3.94.94-.82 0-2.07-.92-3.41-.9-1.75.03-3.37 1.02-4.27 2.59-1.83 3.17-.47 7.87 1.31 10.44.87 1.26 1.9 2.67 3.26 2.62 1.31-.05 1.8-.85 3.39-.85 1.57 0 2.02.85 3.4.82 1.41-.02 2.3-1.28 3.16-2.55 1-1.46 1.41-2.88 1.43-2.95-.03-.01-2.74-1.05-2.77-4.16M14.5 4.41c.72-.88 1.21-2.1 1.08-3.31-1.04.04-2.31.69-3.06 1.56-.67.78-1.25 2.02-1.09 3.21 1.16.09 2.35-.59 3.07-1.46"/></svg>
+      Apple</button>
+  </div>
+</div></div>
+
+<div class="modal-bg" id="keyModal"><div class="modal panel gilt">
+  <span class="corner tl"></span><span class="corner br"></span>
+  <h3>API Keys</h3>
+  <p>Keys are stored only on this device. Never in the app's code, so they stay private and GitHub won't flag them.</p>
+
+  <div class="login-field">
+    <label>AudD API Key: for real song recognition</label>
+    <input type="text" id="auddKeyInput" placeholder="paste your AudD API token…"/>
+    <p class="key-saved" id="auddSaved"></p>
+    <p class="login-hint"><b>Free key:</b> audd.io → sign up → API dashboard. The free tier covers a few hundred lookups a month. Without a key, Audiochroma reads the typed title's mood instead.</p>
+  </div>
+
+  <div class="login-field" style="margin-top:16px">
+    <label>Last.fm API Key: for song metadata <span style="color:var(--parch-faint)">(optional)</span></label>
+    <input type="text" id="lfmKeyInput" placeholder="paste your Last.fm API key…"/>
+    <p class="key-saved" id="lfmSaved"></p>
+    <p class="login-hint"><b>Free key:</b> last.fm/api → Get an API account. Enriches a typed song with genre tags for a closer palette. Completely free.</p>
+  </div>
+
+  <button class="mini-btn login-go" id="keySave" style="margin-top:16px"><i data-icon="check"></i> Save Keys</button>
+  <button class="rune-btn" id="keyClear" style="width:100%;margin-top:9px">Remove Saved Keys</button>
+  <button class="rune-btn" id="keyClose" style="width:100%;margin-top:9px;opacity:.7">Close</button>
+</div></div>
+
+<script>
+/* =========================================================
+   AETHER NEXUS · Stellaris Solutions / Albanus Design
+   ========================================================= */
+
+/* ---- CONFIG: optional Google Sign-In ---- */
+const GOOGLE_CLIENT_ID = ""; // paste your OAuth client ID to enable real Google login
+
+/* ---- CONFIG: ACRCloud proxy for Audiochroma "Listen" ----
+   Your Cloudflare Worker proxies song-recognition requests so your
+   ACRCloud credentials stay server-side. Leave blank to disable Listen.
+   Worker secrets required: ACR_ACCESS_KEY, ACR_ACCESS_SECRET, ACR_HOST */
+const AUDD_PROXY_URL = "https://acrcloud-proxy.albanus-design.workers.dev";
+
+/* =========================================================
+   SIGILS
+   ========================================================= */
+/* compact header seal — distilled from the arcane engine */
+function headerMark(){
+  const C=100;
+  const pol=(r,d)=>{const a=(d-90)*Math.PI/180;
+    return [+(C+r*Math.cos(a)).toFixed(1),+(C+r*Math.sin(a)).toFixed(1)];};
+  const sq=(r,o)=>{let p='';for(let i=0;i<4;i++){const[x,y]=pol(r,o+i*90);
+    p+=(i?'L':'M')+x+','+y;}return p+'Z';};
+  const star=(ro,ri)=>{let p='';for(let i=0;i<16;i++){const[x,y]=pol(i%2?ri:ro,i*22.5);
+    p+=(i?'L':'M')+x+','+y;}return p+'Z';};
+  let ticks='';
+  for(let i=0;i<24;i++){const[x1,y1]=pol(92,i*15),[x2,y2]=pol(85,i*15);
+    ticks+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--gold-deep)" stroke-width="2"/>`;}
+  return `
+  <g class="hm-spin">
+    <circle cx="100" cy="100" r="95" fill="none" stroke="var(--gold)" stroke-width="2.4"/>
+    <circle cx="100" cy="100" r="78" fill="none" stroke="var(--gold-deep)" stroke-width="1.6" stroke-dasharray="3 6"/>
+    ${ticks}
+  </g>
+  <path d="${sq(60,0)}" fill="none" stroke="var(--parch)" stroke-width="3" stroke-linejoin="round"/>
+  <path d="${sq(60,45)}" fill="none" stroke="var(--parch)" stroke-width="3" stroke-linejoin="round"/>
+  <path d="${star(46,17)}" fill="none" stroke="var(--arcane)" stroke-width="3" stroke-linejoin="round"/>
+  <path d="${star(24,8)}" fill="var(--gold)" stroke="none"/>
+  <circle cx="100" cy="100" r="5" fill="var(--arcane)"/>`;
+}
+
+/* small compass sigil — pocket site only */
+function sigilSVG(){
+  return `
+  <defs><radialGradient id="sgCore" cx="50%" cy="42%" r="60%">
+    <stop offset="0%" stop-color="#fbf6e8"/><stop offset="58%" stop-color="#e6c25a"/>
+    <stop offset="100%" stop-color="#9a6a14"/></radialGradient></defs>
+  <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(79,150,147,.4)"
+    stroke-width="1" stroke-dasharray="2 8"/>
+  <circle cx="100" cy="100" r="74" fill="none" stroke="rgba(236,228,207,.5)"
+    stroke-width="1.2" stroke-dasharray="14 7"/>
+  <circle cx="100" cy="100" r="62" fill="none" stroke="url(#sgCore)" stroke-width="2"/>
+  <g fill="url(#sgCore)">
+    <path d="M100 42 L108 92 L100 100 L92 92 Z"/><path d="M100 158 L92 108 L100 100 L108 108 Z"/>
+    <path d="M42 100 L92 92 L100 100 L92 108 Z"/><path d="M158 100 L108 108 L100 100 L108 92 Z"/></g>
+  <g fill="rgba(236,228,207,.9)">
+    <path d="M141 59 L106 94 L100 100 L104 90 Z"/><path d="M59 141 L94 106 L100 100 L96 110 Z"/>
+    <path d="M141 141 L106 106 L100 100 L110 104 Z"/><path d="M59 59 L94 94 L100 100 L90 96 Z"/></g>
+  <circle cx="100" cy="100" r="10" fill="url(#sgCore)"/>
+  <circle cx="100" cy="100" r="5" fill="#0c0608"/>
+  <circle cx="100" cy="100" r="2.4" fill="#4f9693"/>`;
+}
+
+/* ---- alchemical node symbols (drawn around 0,0) ---- */
+function symSun(){return `<circle class="ar-sym" r="8.4"/><circle class="ar-symf" r="2.2"/>`;}
+function symMoon(){return `<path class="ar-symf" d="M2.4,-8.6 A8.6,8.6 0 1 0 2.4,8.6 A6.3,8.6 0 0 1 2.4,-8.6Z"/>`;}
+function symMercury(){return `<path class="ar-sym" d="M-4,-9.4 A4.3,4.3 0 0 0 4,-9.4"/><circle class="ar-sym" cx="0" cy="-2" r="4.4"/><path class="ar-sym" d="M0,2.4 L0,10 M-3.6,6.2 L3.6,6.2"/>`;}
+function symSalt(){return `<circle class="ar-sym" r="8"/><path class="ar-sym" d="M-8,0 L8,0"/>`;}
+function symSulfur(){return `<path class="ar-sym" d="M0,-9 L7.6,4.2 L-7.6,4.2Z"/><path class="ar-sym" d="M0,4.2 L0,11 M-3.4,7.6 L3.4,7.6"/>`;}
+function symStar4(){return `<path class="ar-symf" d="M0,-9.2 L2.4,-2.4 9.2,0 2.4,2.4 0,9.2 -2.4,2.4 -9.2,0 -2.4,-2.4Z"/>`;}
+function symAir(){return `<path class="ar-sym" d="M0,-8.6 L8,6.2 L-8,6.2Z"/><path class="ar-sym" d="M-4.7,0.6 L4.7,0.6"/>`;}
+function symEye(){return `<path class="ar-sym" d="M-9.2,0 Q0,-6.6 9.2,0 Q0,6.6 -9.2,0Z"/><circle class="ar-symf" r="2.6"/>`;}
+
+/* =========================================================
+   THE GRAND CIRCLE, landing emblem.
+   A three-lobed transmutation arrangement: one great central
+   circle, three lesser circles at the points of a triangle.
+   Each lesser circle holds four golden discipline sigils that
+   spin fast within it. Built on an 0 0 440 380 field.
+   ========================================================= */
+
+/* --- twelve compact discipline marks, drawn around 0,0 on a
+   ~24px field, golden. One per build, grouped four-per-lobe. --- */
+const DISC_SIGILS={
+ /* lobe A — the dark crafts */
+ revenant:`<circle r="7"/><path d="M-4,1 Q0,-3 4,1 Q0,5 -4,1Z" fill="currentColor" stroke="none"/><path d="M0,7 L0,11"/>`,
+ nightscribe:`<path d="M0,-10 L4,2 L-4,2Z"/><path d="M0,-4 L0,2"/><path d="M0,5 q-3,3 0,7 q3,-4 0,-7Z" fill="currentColor" stroke="none"/>`,
+ etchwarden:`<rect x="-7" y="-7" width="14" height="14" transform="rotate(45)"/><path d="M-4,0 L4,0 M0,-4 L0,4"/>`,
+ swordbreaker:`<path d="M0,-10 L7,0 L0,10 L-7,0Z"/><path d="M-4,-3 L4,-3 M-4,3 L4,3"/>`,
+ /* lobe B — the painters */
+ tideshaper:`<circle r="8"/><path d="M-7,1 q3.5,-4 7,0 t7,0"/><path d="M-7,5 q3.5,-4 7,0 t7,0"/>`,
+ alchemist:`<circle cx="0" cy="-3" r="6"/><path d="M-5,2 L5,2 L3,9 L-3,9Z"/>`,
+ lumenwright:`<circle r="6"/><path d="M0,-10 L0,-8 M0,8 L0,10 M-10,0 L-8,0 M8,0 L10,0 M-7,-7 L-5.5,-5.5 M5.5,5.5 L7,7 M7,-7 L5.5,-5.5 M-5.5,5.5 L-7,7"/>`,
+ elementalist:`<path d="M0,-9 L8,5 L-8,5Z"/><path d="M0,9 L-8,-5 L8,-5Z"/>`,
+ /* lobe C — the makers */
+ aethermancer:`<path d="M0,-9 L9,0 L0,9 L-9,0Z"/><path d="M0,-4.5 L4.5,0 L0,4.5 L-4.5,0Z"/>`,
+ runesmith:`<path d="M0,-9 L7.8,-4.5 L7.8,4.5 L0,9 L-7.8,4.5 L-7.8,-4.5Z"/><path d="M0,-5 L0,5"/>`,
+ worldsmith:`<circle r="6.5"/><ellipse rx="11" ry="4.5" transform="rotate(-25)"/>`,
+ loreweaver:`<path d="M0,-8 L0,9"/><path d="M0,-8 C-4,-11 -9,-11 -11,-8 L-11,7 C-9,4 -4,4 0,8"/><path d="M0,-8 C4,-11 9,-11 11,-8 L11,7 C9,4 4,4 0,8"/>`
+};
+const DISC_ORDER=['revenant','nightscribe','etchwarden','swordbreaker',
+                  'tideshaper','alchemist','lumenwright','elementalist',
+                  'aethermancer','runesmith','worldsmith','loreweaver'];
+
+function discMark(id){
+  return `<g class="gc-disc">${DISC_SIGILS[id]||DISC_SIGILS.revenant}</g>`;
+}
+
+/* one lesser circle: rings + 4 fast-spinning golden discipline sigils */
+function lesserCircle(cx,cy,R,ids,spinClass){
+  const pol=(r,deg)=>{const a=(deg-90)*Math.PI/180;
+    return [+(cx+r*Math.cos(a)).toFixed(2),+(cy+r*Math.sin(a)).toFixed(2)];};
+  /* fine tick ring */
+  let ticks='';
+  for(let i=0;i<48;i++){
+    const [x1,y1]=pol(R-3,i*7.5),[x2,y2]=pol(i%4?R-6:R-9,i*7.5);
+    ticks+=`<line class="ar-tick" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+  }
+  /* the four discipline sigils, on a spinning inner group */
+  let marks='';
+  for(let i=0;i<4;i++){
+    const [mx,my]=pol(R*0.5,i*90);
+    marks+=`<g transform="translate(${mx},${my})">${discMark(ids[i])}</g>`;
+  }
+  /* faint pip ring just inside */
+  let pips='';
+  for(let i=0;i<24;i++){
+    const [px,py]=pol(R*0.74,i*15);
+    pips+=`<circle class="ar-hair" cx="${px}" cy="${py}" r="${i%2?1.3:0.8}"/>`;
+  }
+  return `
+   <g>
+     <circle class="ar-line" cx="${cx}" cy="${cy}" r="${R}"/>
+     <circle class="ar-line-dim" cx="${cx}" cy="${cy}" r="${R-4}"/>
+     <g class="gc-tickspin" style="transform-origin:${cx}px ${cy}px">${ticks}</g>
+     <circle class="ar-line-dim" cx="${cx}" cy="${cy}" r="${R*0.78}"/>
+     ${pips}
+     <circle class="ar-energy2" cx="${cx}" cy="${cy}" r="${R*0.66}"/>
+     <g class="${spinClass}" style="transform-origin:${cx}px ${cy}px">
+       <circle class="ar-hair" cx="${cx}" cy="${cy}" r="${R*0.5}"/>
+       ${marks}
+     </g>
+     <circle class="ar-coredot" cx="${cx}" cy="${cy}" r="2.6"/>
+   </g>`;
+}
+
+function emblemSVG(){
+  const CX=250, CY=230;          /* centre of the great circle */
+  const GR=152;                  /* great circle radius */
+  const LR=48;                   /* lesser circle radius */
+  const LD=198;                  /* lesser circle orbit distance from centre */
+  const pol=(r,deg,ox,oy)=>{const a=(deg-90)*Math.PI/180;
+    return [+((ox||CX)+r*Math.cos(a)).toFixed(2),+((oy||CY)+r*Math.sin(a)).toFixed(2)];};
+  const poly=(n,r,off)=>{let p='';for(let i=0;i<n;i++){
+    const [x,y]=pol(r,off+i*360/n);p+=(i?'L':'M')+x+','+y;}return p+'Z';};
+  const starPath=(k,rOut,rIn,off)=>{let p='';for(let i=0;i<k*2;i++){
+    const [x,y]=pol(i%2?rIn:rOut,(off||0)+i*180/k);p+=(i?'L':'M')+x+','+y;}return p+'Z';};
+
+  /* three lesser-circle centres: top, lower-left, lower-right */
+  const lobes=[[CX,CY-LD],
+               [CX-LD*0.866,CY+LD*0.5],
+               [CX+LD*0.866,CY+LD*0.5]];
+
+  /* ---- great-circle ring plan, outermost to innermost ----
+       152  outer dashed edge
+       148  tick band (ticks 148 -> 140)
+       134  white incantation ring  (gcIncA, its own clear band)
+       120  hairline divider
+       106  faint incantation ring  (gcIncB, its own clear band)
+        92  faint pip ring of tiny circles
+        80  red energy ring
+        66  hexagram + inner geometry
+        38  compass-star core                                  */
+
+  let ticksA='';
+  for(let i=0;i<140;i++){
+    const [x1,y1]=pol(148,i*360/140),[x2,y2]=pol(i%5?144:140,i*360/140);
+    ticksA+=`<line class="ar-tick" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+  }
+  /* faint pip ring — its own band, clear of both text rings */
+  let gpips='';
+  for(let i=0;i<72;i++){
+    const [px,py]=pol(92,i*5);
+    gpips+=`<circle class="ar-hair" cx="${px}" cy="${py}" r="${i%2?1.5:0.9}"/>`;
+  }
+  /* connecting triangle between the three lobes */
+  let triangle='';
+  for(let i=0;i<3;i++){
+    const a=lobes[i], b=lobes[(i+1)%3];
+    triangle+=`<line class="ar-line-dim" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"/>`;
+  }
+
+  return `
+  <defs>
+    <path id="gcIncA" d="M${CX},${CY-134} A134,134 0 1 1 ${CX-0.01},${CY-134}"/>
+    <path id="gcIncB" d="M${CX},${CY+106} A106,106 0 1 0 ${CX-0.01},${CY+106}"/>
+  </defs>
+
+  <!-- LAYER 1 — great circle outer band: edge + tick ring -->
+  <g class="ar-outer" style="transform-origin:${CX}px ${CY}px">
+    <circle class="ar-line" cx="${CX}" cy="${CY}" r="152" stroke-dasharray="1.4 6"/>
+    <circle class="ar-line-dim" cx="${CX}" cy="${CY}" r="149"/>
+    ${ticksA}
+    <circle class="ar-line-dim" cx="${CX}" cy="${CY}" r="139"/>
+    <circle class="ar-line" cx="${CX}" cy="${CY}" r="122"/>
+  </g>
+
+  <!-- LAYER 2 — twin Latin incantation rings, each in clear air -->
+  <g class="ar-text" style="transform-origin:${CX}px ${CY}px">
+    <text class="ar-incant"><textPath href="#gcIncA" startOffset="0" textLength="842" lengthAdjust="spacing">EX VISIONE MVNDI ORIVNTVR · OPVS ARTIFICIS ETERNVM · CREATIO SINE FINE EST · AETHER NEXUS ·&#160;</textPath></text>
+    <circle class="ar-hair" cx="${CX}" cy="${CY}" r="118"/>
+    <text class="ar-incant ar-incant-sm"><textPath href="#gcIncB" startOffset="0" textLength="666" lengthAdjust="spacing">ARS · LABOR · INGENIVM · DISCIPLINA · MEMORIA · LVMEN · FORMA · VMBRA ·&#160;</textPath></text>
+  </g>
+
+  <!-- LAYER 3 — faint pip ring of tiny circles, its own band -->
+  <g class="ar-nodes" style="transform-origin:${CX}px ${CY}px">
+    <circle class="ar-line-dim" cx="${CX}" cy="${CY}" r="98"/>
+    ${gpips}
+    <circle class="ar-line-dim" cx="${CX}" cy="${CY}" r="86"/>
+  </g>
+
+  <!-- red energy ring, in its own clear band -->
+  <circle class="ar-energy" cx="${CX}" cy="${CY}" r="80"/>
+
+  <!-- LAYER 4 — central transmutation geometry -->
+  <g class="ar-geo" style="transform-origin:${CX}px ${CY}px">
+    ${triangle}
+    <path class="ar-geo-line" d="${poly(3,66,0)}"/>
+    <path class="ar-geo-line" d="${poly(3,66,180)}"/>
+    <circle class="ar-hair" cx="${CX}" cy="${CY}" r="50"/>
+  </g>
+
+  <!-- LAYER 5 — compass-star core -->
+  <g class="ar-core" style="transform-origin:${CX}px ${CY}px">
+    <path class="ar-star8" d="${starPath(8,40,15)}"/>
+    <path class="ar-gold-line" d="${poly(8,28,22.5)}"/>
+    <path class="ar-star4" d="${starPath(4,21,7)}"/>
+    <circle class="ar-energy2" cx="${CX}" cy="${CY}" r="5"/>
+    <circle class="ar-coredot" cx="${CX}" cy="${CY}" r="2.8"/>
+  </g>
+
+  <!-- THE THREE LESSER CIRCLES — orbit the great circle, spin fast -->
+  <g class="gc-orbit" style="transform-origin:${CX}px ${CY}px">
+   <g class="gc-lobe gc-lobe-a">
+     ${lesserCircle(lobes[0][0],lobes[0][1],LR,DISC_ORDER.slice(0,4),'gc-sigspin-a')}
+   </g>
+   <g class="gc-lobe gc-lobe-b">
+     ${lesserCircle(lobes[1][0],lobes[1][1],LR,DISC_ORDER.slice(4,8),'gc-sigspin-b')}
+   </g>
+   <g class="gc-lobe gc-lobe-c">
+     ${lesserCircle(lobes[2][0],lobes[2][1],LR,DISC_ORDER.slice(8,12),'gc-sigspin-c')}
+   </g>
+  </g>`;
+}
+
+/* hydrate any <i data-icon="..."> placeholders in static markup */
+function hydrateIcons(root){
+  (root||document).querySelectorAll('i[data-icon]').forEach(el=>{
+    el.innerHTML=icon(el.dataset.icon);
+    el.removeAttribute('data-icon');
+  });
+}
+/* mount sigils + icons — runs once, after every const/function below
+   has been initialised (see boot() call at end of script) */
+function boot(){
+  document.getElementById('emblemMain').innerHTML=emblemSVG();
+  const _tb=document.getElementById('sigilTop'); if(_tb) _tb.innerHTML=headerMark();
+  const _pk=document.getElementById('sigilPocket'); if(_pk) _pk.innerHTML=sigilSVG();
+  /* faint emblem watermark behind every app page, gently rotating.
+     IDs are suffixed so its textPath refs don't clash with the landing. */
+  const wm=document.getElementById('appWatermark');
+  if(wm){
+    let em=emblemSVG().replace(/gcIncA/g,'gcIncA_wm').replace(/gcIncB/g,'gcIncB_wm');
+    wm.innerHTML='<svg viewBox="0 -22 500 412"><g class="gc-spin-slow" '
+      +'style="transform-origin:250px 230px">'+em+'</g></svg>';
+  }
+  hydrateIcons();
+}
+
+/* ---- starfield ---- */
+(function(){
+  let html='';
+  for(let i=0;i<60;i++){
+    const s=(Math.random()*2+.6).toFixed(1);
+    html+=`<div class="star" style="left:${(Math.random()*100).toFixed(2)}%;
+      top:${(Math.random()*100).toFixed(2)}%;width:${s}px;height:${s}px;
+      --d:${(Math.random()*5+3).toFixed(1)}s;--dl:${(Math.random()*5).toFixed(1)}s"></div>`;
+  }
+  document.getElementById('starfield').innerHTML=html;
+})();
+
+/* ---- drifting embers (landing only) ---- */
+(function(){
+  const ec=['#4f9693','#d8a544','#a01622','#e6c25a','#4f9693','#8c1019'];
+  let html='';
+  for(let i=0;i<18;i++){
+    const sz=(Math.random()*3+1.5).toFixed(1);
+    html+=`<div class="ember" style="left:${(Math.random()*100).toFixed(1)}%;
+      width:${sz}px;height:${sz}px;--ec:${ec[i%ec.length]};
+      --ed:${(Math.random()*9+9).toFixed(1)}s;--edl:${(Math.random()*10).toFixed(1)}s;
+      --edx:${(Math.random()*120-60).toFixed(0)}px"></div>`;
+  }
+  document.getElementById('embers').innerHTML=html;
+})();
+
+/* =========================================================
+   BUILD DATA, 12 disciplines
+   ========================================================= */
+function nodes(a){return a.map(n=>({lvl:n[0],name:n[1],desc:n[2]}));}
+
+/* =========================================================
+   RITE POOLS, each discipline has a deep, ordered pool of
+   practice rites. `t` is the tier: the build level at which
+   the rite becomes available. The Atelier always surfaces the
+   next 4 unlocked, uncompleted rites; finishing one archives
+   it and pulls the next from the pool.
+   Format: [tier, type, name, xp, prompt]
+   Designed as lunch-break practice, short, single-focus,
+   each one building on the last toward a finished piece.
+   ========================================================= */
+function ritePool(a){
+  return a.map((e,i)=>({t:e[0],type:e[1],name:e[2],xp:e[3],desc:e[4],idx:i}));
+}
+
+const RITES={
+ revenant:ritePool([
+  [1,'Warmup','Five-Minute Bones',60,'Sketch five small bones or skull fragments fast, one minute each. No erasing.'],
+  [1,'Drawing','Conjure a Skull',95,'Draw or create a skull in your preferred medium. Loose and exploratory, just get its planes down.'],
+  [2,'Drawing','Light the Skull',110,'Practice light sources on that skull. Pick one direction, commit its highlights and cast shadows.'],
+  [3,'Technique','The Three Shadings',105,'Practice stippling, crosshatching, and smudging across three quick swatches.'],
+  [4,'Composition','Skull and Mushroom',125,'Add details such as mushrooms, moss, or bone growth to the skull to build a small finished composition.'],
+  [5,'Drawing','A Single Crow',100,'Draw one crow or raven. Focus on the silhouette reading clearly.'],
+  [6,'Ideation','Name Three Fears',105,'List three fears. Sketch a small creature born from each in fifteen minutes.'],
+  [8,'Technique','Value Crush',120,'Render any scene in only three values, the darkest dominant. No mid-tone rescue.'],
+  [10,'Drawing','Dead Tree',115,'Draw a bare, twisted tree. Let the branches feel like reaching fingers.'],
+  [12,'Study','Bone Library',120,'Draw three different bones from reference, feeling how each catches light.'],
+  [15,'Drawing','One Candle',140,'Light an entire composition with a single small source. Let most of the page fall to dark.'],
+  [19,'Ideation','The Wrong Smile',130,'Design a friendly subject made subtly horrifying. Change one thing only.'],
+  [24,'Drawing','Hands of the Dead',140,'Draw a skeletal or withered hand in three poses.'],
+  [30,'Study','Master of Murk',150,'Study a Goya or Beksinski piece and map its value structure in a quick thumbnail.'],
+  [38,'Technique','Texture of Decay',160,'Render bone, rot, and ruined cloth as three texture studies.'],
+  [48,'Drawing','Rot Study',175,'Draw one object fresh, then again decayed. Same angle, same light.'],
+  [60,'Composition','The Long Dark',200,'Build one image that sustains a single dread mood from edge to edge.'],
+  [75,'Mastery','Eclipse Doctrine',225,'Stage light in a piece as a rare, fragile, sacred event.'],
+  [90,'Mastery','Revenant Ascendant',260,'Make a finished piece whose darkness is unmistakably, only yours.']
+ ]),
+ tideshaper:ritePool([
+  [1,'Warmup','Five Wet Strokes',60,'Lay five loose brushstrokes of clean water and pigment. Watch how each behaves.'],
+  [1,'Technique','The Flat Wash',95,'Lay one flat, even wash across a small rectangle. No blooms, no streaks.'],
+  [2,'Technique','Wet Into Wet',110,'Drop a second color into a wet wash. Watch it bleed; do not touch it.'],
+  [3,'Technique','The Graded Wash',105,'Lay a wash that fades smoothly from full color to clear water.'],
+  [4,'Study','Three Skies',125,'Paint the same patch of sky three times: dawn, noon, storm.'],
+  [5,'Drawing','One Loose Leaf',100,'Paint a single leaf in under ten minutes. Speed keeps it alive.'],
+  [6,'Technique','Reserve the Light',105,'Paint a simple subject leaving the white of the paper as your brightest light.'],
+  [8,'Technique','Salt and Bloom',120,'Drop salt into a damp wash and let it carve its own texture.'],
+  [10,'Drawing','A Single Pear',115,'Paint one piece of fruit, building form with two or three washes.'],
+  [12,'Study','Color Wheel in Water',120,'Mix and paint a small wheel, feeling how each pigment behaves wet.'],
+  [15,'Technique','Granulation Hunt',140,'Find a granulating pigment and build a small texture study from how it settles.'],
+  [19,'Drawing','Wet Street',130,'Paint a small street scene with reflections in loose, wet strokes.'],
+  [24,'Composition','Glazed Depth',140,'Stack three transparent glazes to push one shape far back into space.'],
+  [30,'Study','Master Copy, Water',150,'Copy a passage of water from any master watercolorist. Chase their edges.'],
+  [38,'Technique','Lost and Found Edge',160,'Paint one subject where half its edges dissolve into the background.'],
+  [48,'Drawing','Rain on Glass',175,'Paint a scene viewed through wet glass: everything soft, nothing sharp.'],
+  [60,'Composition','One Breath Landscape',200,'Paint a full landscape in a single sitting before the first wash dries.'],
+  [75,'Mastery','The Living Wash',225,'Finish a piece where the water clearly led and you only guided.'],
+  [90,'Mastery','Tideshaper Ascendant',260,'Finish a watercolor only this medium could have made.']
+ ]),
+ elementalist:ritePool([
+  [1,'Warmup','Five Pressure Marks',60,'Make five marks, each at a different pressure. Feel the range of the pencil.'],
+  [1,'Technique','Pressure Ladder',95,'Draw a strip of one color from whisper-faint to full pressure in even steps.'],
+  [2,'Technique','Two-Color Blend',110,'Blend two colored pencils into a seamless gradient with no visible seam.'],
+  [3,'Drawing','Burnished Sphere',105,'Render one sphere, burnishing the highlight until it gleams.'],
+  [4,'Technique','Layered Neutral',125,'Build a believable grey or brown from three bright pencils. Never touch a grey pencil.'],
+  [5,'Drawing','One Smooth Stone',100,'Render a single stone, chasing its subtle color shifts.'],
+  [6,'Study','Texture Trio',105,'Render three textures side by side: metal, fur, glass. Small and quick.'],
+  [8,'Technique','The Highlight Lift',120,'Practice lifting highlights with an eraser or burnisher on a dark patch.'],
+  [10,'Drawing','A Single Berry',115,'Render one berry, finding the five colors hiding in its skin.'],
+  [12,'Study','Color Temperature',120,'Render the same shape twice, once warm-lit, once cool-lit.'],
+  [15,'Technique','Optical Mixing',140,'Build a color by layering two others so the eye mixes them. No physical blend.'],
+  [19,'Drawing','Folded Cloth',130,'Render a small piece of folded fabric, chasing its soft shadows.'],
+  [24,'Drawing','Translucent Object',140,'Render one object with light passing through it.'],
+  [30,'Study','Master Copy, Skin',150,'Copy a small passage of rendered skin. Chase the temperature shifts.'],
+  [38,'Technique','The Glass Study',160,'Render a glass object: all reflection, refraction, and edge.'],
+  [48,'Drawing','The Long Render',175,'Spend a full session on one small object, pushing detail past comfortable.'],
+  [60,'Composition','Still Life Trio',200,'Compose and render a three-object still life with a unified light.'],
+  [75,'Mastery','Depth of Pigment',225,'Finish a piece whose color depth could not be done in a faster medium.'],
+  [90,'Mastery','Elementalist Ascendant',260,'Finish a colored-pencil work that rivals paint for richness.']
+ ]),
+ swordbreaker:ritePool([
+  [1,'Warmup','Five Clean Lines',60,'Draw five long straight lines in single confident strokes. No dragging.'],
+  [1,'Technique','Ten Line Weights',95,'Draw ten straight lines, each a different weight, from hairline to bold.'],
+  [2,'Technique','Value Strip',110,'Build a smooth graphite value strip, pure white to deepest black, nine steps.'],
+  [3,'Drawing','Form From Core',105,'Render a simple form using the core shadow as your anchor, not the outline.'],
+  [4,'Technique','Hatching Speed',125,'Fill three boxes with hatching at three speeds. Note which reads cleanest.'],
+  [5,'Drawing','One Cube, One Sphere',100,'Render a cube and a sphere under the same light. Match their shadows.'],
+  [6,'Study','Plane Break',105,'Draw one object as faceted planes only. No curves, no blending.'],
+  [8,'Technique','The Smudge Test',120,'Render a soft gradient by blending, then by hatching. Compare them.'],
+  [10,'Drawing','Reflected Light',115,'Render a sphere on a surface, finding the faint reflected light in its shadow.'],
+  [12,'Study','Drapery Fold',120,'Draw a single fold of cloth, chasing its core and cast shadow.'],
+  [15,'Technique','Edge Control',140,'Render one form using only edge quality, sharp to soft, to describe it.'],
+  [19,'Drawing','A Worn Tool',130,'Render a hammer, key, or wrench. Chase the metal and the wear.'],
+  [24,'Drawing','The Cast Drawing',140,'Render a white object under raking light, chasing every subtle plane.'],
+  [30,'Study','Master Copy, Graphite',150,'Copy a small Bargue or master drawing passage. Match the values exactly.'],
+  [38,'Technique','Full Value Range',160,'Render a piece using the entire scale, white paper to black, with control.'],
+  [48,'Drawing','Long Tonal Study',175,'Spend a full session on one tonal drawing, pushing the value range fully.'],
+  [60,'Composition','Portrait in Graphite',200,'Render a full portrait or figure study with controlled value.'],
+  [75,'Mastery','The Struck Edge',225,'Finish a graphite piece with the precision of a struck blade.'],
+  [90,'Mastery','Swordbreaker Ascendant',260,'Finish a drawing so exact it needs no color at all.']
+ ]),
+ nightscribe:ritePool([
+  [1,'Warmup','Five Ink Strokes',60,'Draw five long ink lines in single strokes. Commit to each one.'],
+  [1,'Technique','Line Confidence',95,'Draw twenty long ink lines in one stroke each. No going back over them.'],
+  [2,'Technique','Dot to Solid',110,'Build a value scale in ink, sparse dots to solid black, by density alone.'],
+  [3,'Drawing','Contour Only',105,'Draw one object in a single continuous ink contour without lifting the pen.'],
+  [4,'Technique','Crosshatch Forms',125,'Render a sphere, a cube, and a cylinder in crosshatching only.'],
+  [5,'Drawing','One Bold Insect',100,'Ink an insect, leaning on solid black shapes for its body.'],
+  [6,'Study','Texture in Ink',105,'Render three textures with ink mark-making alone: bark, scales, cloth.'],
+  [8,'Technique','Brush Line Variety',120,'Practice a brush-ink line that swells and tapers across one stroke.'],
+  [10,'Drawing','Spot Black Study',115,'Compose a small drawing where bold spotted blacks carry the design.'],
+  [12,'Drawing','A Single Mushroom',120,'Ink a mushroom, building its gills with fine parallel lines.'],
+  [15,'Technique','Brush and Pen',140,'Combine brush ink and pen line in one piece, mass against detail.'],
+  [19,'Drawing','Inked Portrait',130,'Ink a face, describing form with line direction alone.'],
+  [24,'Composition','Negative Space',140,'Make a drawing where the white shapes are as designed as the black.'],
+  [30,'Study','Master Copy, Ink',150,'Copy a passage from an inker you admire. Chase their line economy.'],
+  [38,'Technique','Pure Stipple',160,'Render a small subject entirely in stippling. Patience and dots.'],
+  [48,'Drawing','Inktober Sprint',175,'Complete one fully rendered ink illustration in a single sitting.'],
+  [60,'Composition','The Ink Page',200,'Compose a full illustrated page balancing line, mass, and white.'],
+  [75,'Mastery','Every Mark Earned',225,'Finish an ink piece where no stroke is wasted.'],
+  [90,'Mastery','Nightscribe Ascendant',260,'Finish a work that proves ink needs no color or grey.']
+ ]),
+ alchemist:ritePool([
+  [1,'Warmup','Five Color Mixes',60,'Mix five distinct colors from your palette. Name what each could paint.'],
+  [1,'Technique','Opaque Coverage',95,'Mix one color and lay it flat and fully opaque over a dark ground.'],
+  [2,'Technique','Wet Blend Window',110,'Blend two acrylics wet before they set. Race the dry time.'],
+  [3,'Drawing','Block-In Speed',105,'Block in a simple subject with flat shapes in under ten minutes.'],
+  [4,'Technique','Glaze Over Opaque',125,'Lay a transparent glaze over a dry opaque layer to shift its color.'],
+  [5,'Study','Three-Value Shapes',100,'Paint three simple objects in three values only: light, mid, shadow.'],
+  [6,'Technique','Dry Brush Texture',105,'Build texture with a dry brush over a contrasting dry layer.'],
+  [8,'Drawing','One Flat Portrait',120,'Paint a face in flat shapes of color. No blending yet.'],
+  [10,'Technique','Hard and Soft Edge',115,'Paint one shape with one crisp edge and one blended edge.'],
+  [12,'Study','Limited Palette Mix',120,'Mix a full range from only red, yellow, blue, and white.'],
+  [15,'Composition','Limited Palette Piece',140,'Paint a full small piece with only three colors plus white.'],
+  [19,'Drawing','Glass and Metal',130,'Paint a reflective object, chasing its sharp value jumps.'],
+  [24,'Technique','Impasto Accent',140,'Finish a small study with thick impasto only in its focal point.'],
+  [30,'Study','Master Copy, Acrylic',150,'Copy a passage from a painter you admire, matching their edges.'],
+  [38,'Technique','Layered Underpainting',160,'Build a piece from a toned underpainting up through opaque layers.'],
+  [48,'Drawing','Alla Prima Sprint',175,'Complete one painting in a single wet session, start to finish.'],
+  [60,'Composition','Full Acrylic Piece',200,'Compose and finish a layered acrylic work, planned through.'],
+  [75,'Mastery','Pigment Into Light',225,'Finish a piece that turns cheap pigment into something that glows.'],
+  [90,'Mastery','Alchemist Ascendant',260,'Finish a work whose layered depth feels almost lit from within.']
+ ]),
+ aethermancer:ritePool([
+  [1,'Warmup','Five Brush Tests',60,'Make a quick mark with five different brushes. Learn what each one does.'],
+  [1,'Technique','Brush Calibration',95,'Set up three brushes: sketch, paint, blend. Test each with a quick study.'],
+  [2,'Technique','Layer Discipline',110,'Build a small image on named layers: sketch, flats, shadow, light.'],
+  [3,'Drawing','Flat Color Block',105,'Block a character or object in flat silhouette color, no detail.'],
+  [4,'Technique','Soft and Hard Light',125,'Render one form using a soft-light layer and a hard-edge layer together.'],
+  [5,'Study','Photo Value Study',100,'Desaturate a photo and match its value structure in a quick paint-over.'],
+  [6,'Technique','Custom Brush Texture',105,'Make or pick one texture brush and build a small surface study with it.'],
+  [8,'Drawing','Silhouette Thumbnails',120,'Design three silhouettes for one idea, clear and readable.'],
+  [10,'Technique','Clipping Mask Render',115,'Flat-color a shape, then render it on a clipped layer above.'],
+  [12,'Study','Color Picker Discipline',120,'Paint a small study sampling every color from reference. Train your eye.'],
+  [15,'Composition','Lighting Pass',140,'Take a finished flat drawing and add a full lighting pass, ambient plus key.'],
+  [19,'Drawing','Character Turnaround',130,'Draw one character from front, side, and back, consistent throughout.'],
+  [24,'Technique','Color Grade',140,'Take one finished piece and grade it three different moods with adjustment layers.'],
+  [30,'Study','Master Copy, Digital',150,'Copy a passage from a digital painter, matching their rendering logic.'],
+  [38,'Technique','Photobash Blend',160,'Blend a photo texture seamlessly into a painted passage.'],
+  [48,'Drawing','Render Sprint',175,'Take a sketch to a fully rendered illustration in one session.'],
+  [60,'Composition','Full Illustration',200,'Compose, light, and finish a complete environment or scene.'],
+  [75,'Mastery','The Vanishing Tool',225,'Finish a digital piece where the tools vanish and only the image remains.'],
+  [90,'Mastery','Aethermancer Ascendant',260,'Finish a work that could hang beside any traditional painting.']
+ ]),
+ runesmith:ritePool([
+  [1,'Warmup','Five Quick Layouts',60,'Sketch five tiny thumbnail layouts for one poster. Boxes and lines only.'],
+  [1,'Technique','The Grid',95,'Rebuild a simple layout on a strict grid. Feel the structure hold it.'],
+  [2,'Technique','Type Pairing',110,'Pair two typefaces for one headline-and-body lockup. Justify the choice.'],
+  [3,'Drawing','Shape Logo',105,'Build a simple mark from basic geometric shapes only.'],
+  [4,'Technique','Hierarchy Pass',125,'Take a flat block of text and give it three clear levels of hierarchy.'],
+  [5,'Study','Spacing Study',100,'Set the same word three times with different letter-spacing. Feel the shift.'],
+  [6,'Technique','Two-Color Poster',105,'Design a small poster restricted to two ink colors.'],
+  [8,'Drawing','Icon Set of Three',120,'Design three icons that share one consistent visual language.'],
+  [10,'Study','Negative Space Mark',115,'Design a logo that hides a second shape in its negative space.'],
+  [12,'Technique','Color Palette Lock',120,'Build a five-color palette for an invented brand and justify each.'],
+  [15,'Composition','Grid to Break',140,'Build a layout on a grid, then break it once, deliberately, for emphasis.'],
+  [19,'Drawing','Wordmark Design',130,'Design a wordmark for an invented name with custom letterforms.'],
+  [24,'Composition','Brand in a Day',140,'Sketch a tiny brand system, mark, color, and type, for an invented shop.'],
+  [30,'Study','Master Copy, Layout',150,'Recreate a layout from a designer you admire. Measure their spacing.'],
+  [38,'Technique','Type-Only Poster',160,'Design a poster using type as the entire image.'],
+  [48,'Drawing','Editorial Spread',175,'Design a full two-page editorial spread with image and text in balance.'],
+  [60,'Composition','Full Identity',200,'Compose a complete visual identity applied across three mockups.'],
+  [75,'Mastery','The Self-Teaching System',225,'Finish a design system so clear it teaches its own use.'],
+  [90,'Mastery','Runesmith Ascendant',260,'Finish an identity that feels inevitable, as if it always existed.']
+ ]),
+ lumenwright:ritePool([
+  [1,'Warmup','Five Value Notes',60,'Mix and dab five steps of grey, lightest to darkest. Warm up your eye.'],
+  [1,'Technique','Mix the String',95,'Mix a five-step value string of one color before touching the canvas.'],
+  [2,'Technique','Fat Over Lean',110,'Lay a lean underlayer, then a fatter stroke over it. Feel the difference.'],
+  [3,'Drawing','Block-In Masses',105,'Block a subject in big simple masses of the right value and temperature.'],
+  [4,'Technique','Edge Hierarchy',125,'Paint one form with a clear sharpest edge and a clear softest edge.'],
+  [5,'Study','Grisaille Start',100,'Paint a small subject fully in grey before any color goes down.'],
+  [6,'Technique','Warm and Cool Light',105,'Paint a form lit by warm light, with cool shadow, and make it sing.'],
+  [8,'Drawing','One Sphere in Oil',120,'Paint a single sphere, chasing the smooth turn from light to shadow.'],
+  [10,'Technique','Scumble Pass',115,'Drag a thin opaque light over a dry dark to soften and glow.'],
+  [12,'Study','Color of Shadow',120,'Paint the same object twice, studying how its shadow color shifts.'],
+  [15,'Composition','Glaze for Glow',140,'Glaze a transparent dark over a dry light passage for inner glow.'],
+  [19,'Drawing','Folds in Oil',130,'Paint a passage of draped cloth, chasing soft light transitions.'],
+  [24,'Drawing','Skin in Oil',140,'Paint a small skin passage, finding its three temperature zones.'],
+  [30,'Study','Master Copy, Oil',150,'Copy a small passage from an old master. Chase their transitions.'],
+  [38,'Technique','The Lost Edge',160,'Paint a form where its shadow side melts entirely into the background.'],
+  [48,'Drawing','Alla Prima Head',175,'Paint a head study wet in one session, no overthinking.'],
+  [60,'Composition','Full Oil Painting',200,'Compose and finish an oil work through its layered stages.'],
+  [75,'Mastery','To Hold the Light',225,'Finish a painting that holds light the way a window does.'],
+  [90,'Mastery','Lumenwright Ascendant',260,'Finish an oil piece that seems to glow from its own depth.']
+ ]),
+ etchwarden:ritePool([
+  [1,'Warmup','Five Slow Lines',60,'Draw five lines as slowly and precisely as you can manage. Pure control.'],
+  [1,'Technique','The Slow Line',95,'Draw one line as slowly and precisely as you can. Then ten more.'],
+  [2,'Technique','Density Scale',110,'Build a value scale by mark density alone. The finest control you have.'],
+  [3,'Drawing','One Square Inch',105,'Render one square inch of any surface at maximum detail.'],
+  [4,'Technique','Texture Library',125,'Render four micro-textures: pore, thread, grain, scratch, as a reference sheet.'],
+  [5,'Study','Magnified Study',100,'Draw a small object as if seen under magnification. Invent nothing.'],
+  [6,'Drawing','A Single Feather',105,'Render one feather, barb by barb.'],
+  [8,'Technique','Controlled Gradient',120,'Render the smoothest gradient you can by mark density alone.'],
+  [10,'Drawing','Hair by Strand',115,'Render a passage of hair or fur strand by strand, not as a mass.'],
+  [12,'Study','Crystal or Gem',120,'Render a faceted gem, chasing every internal reflection.'],
+  [15,'Technique','Detail Hierarchy',140,'Render one piece where detail is dense at the focal point and rests elsewhere.'],
+  [19,'Drawing','The Eye',130,'Render a single eye with every reflection, vessel, and lash accounted for.'],
+  [24,'Drawing','Insect Carapace',140,'Render an insect shell, chasing its iridescence and texture.'],
+  [30,'Study','Master Copy, Detail',150,'Copy a hyper-detailed passage from an artist you admire.'],
+  [38,'Technique','Surface Within Surface',160,'Render an object with reflections of detailed things on its surface.'],
+  [48,'Drawing','The Long Detail',175,'Spend a full session pushing one small area far past where you would stop.'],
+  [60,'Composition','Hyperdetailed Piece',200,'Compose a finished work dense with discovered detail.'],
+  [75,'Mastery','Drawn or Discovered',225,'Finish a piece whose detail feels less drawn than discovered.'],
+  [90,'Mastery','Etchwarden Ascendant',260,'Finish a work that holds up under any magnification.']
+ ]),
+ worldsmith:ritePool([
+  [1,'Warmup','Ten Tiny Shapes',60,'Draw ten tiny abstract shapes, then name a creature or object for each.'],
+  [1,'Ideation','Thumbnail Ten',95,'Draw ten tiny thumbnails of one idea in ten minutes. Quantity over polish.'],
+  [2,'Drawing','Silhouette Read',110,'Design three creatures or props as black silhouettes only, clear at a glance.'],
+  [3,'Technique','Shape Language',105,'Design the same character three ways: round, square, angular.'],
+  [4,'Ideation','Prop With a Past',125,'Design one prop that silently tells a story about who owned it.'],
+  [5,'Study','Photo-Bash Mood',100,'Build a quick mood frame from photo reference. Value and color, no detail.'],
+  [6,'Drawing','Environment Thumbnail',105,'Thumbnail an environment in three values, establishing depth and scale.'],
+  [8,'Ideation','Three Doors',120,'Design three doorways, each telling you what lies beyond.'],
+  [10,'Drawing','Creature From Two Animals',115,'Design a believable creature by fusing two real animals.'],
+  [12,'Study','Material Study',120,'Render four materials a designer needs: stone, metal, cloth, wood.'],
+  [15,'Composition','Callout Sheet',140,'Take one concept and present it as an orthographic callout sheet.'],
+  [19,'Drawing','Vehicle Concept',130,'Design a vehicle for an invented world, function shaping its form.'],
+  [24,'Ideation','Faction in Three',140,'Design three objects that clearly belong to one invented faction.'],
+  [30,'Study','Master Copy, Concept',150,'Copy a passage from a concept artist, studying their design decisions.'],
+  [38,'Technique','Light and Mood Variants',160,'Take one environment sketch and render it in three different lightings.'],
+  [48,'Drawing','Key Frame',175,'Paint one storytelling key frame: character, place, and moment in one image.'],
+  [60,'Composition','Full Concept Page',200,'Compose a finished concept page: design, callouts, and mood together.'],
+  [75,'Mastery','A World Already Real',225,'Finish a concept that makes a world feel like it already exists.'],
+  [90,'Mastery','Worldsmith Ascendant',260,'Finish a concept a studio could build a film from.']
+ ]),
+ loreweaver:ritePool([
+  [1,'Warmup','Five Stick Stories',60,'Tell five one-panel stick-figure jokes or moments. Loose and fast.'],
+  [1,'Ideation','Six-Panel Beat',95,'Tell one tiny story in six rough panels. Stick figures are fine.'],
+  [2,'Drawing','Expression Sheet',110,'Draw one character in six expressions. Push each past polite.'],
+  [3,'Technique','Staging the Shot',105,'Draw the same moment from three camera angles. Pick the strongest.'],
+  [4,'Ideation','Show, Not Tell',125,'Tell a single story beat in one drawing with no words at all.'],
+  [5,'Drawing','Gesture Sprint',100,'Fill a page with thirty-second gesture drawings. Chase motion.'],
+  [6,'Composition','Panel Flow',105,'Lay out a three-panel sequence where the eye moves cleanly through it.'],
+  [8,'Ideation','Character in One Pose',120,'Design a pose that tells you who a character is before they speak.'],
+  [10,'Drawing','Two-Shot Conversation',115,'Draw two characters mid-conversation, body language doing the talking.'],
+  [12,'Study','Acting With the Face',120,'Draw one face holding two emotions at once: conflicted, layered.'],
+  [15,'Technique','Silent Conversation',140,'Draw two characters in a wordless exchange the reader understands.'],
+  [19,'Drawing','Establishing Shot',130,'Draw an establishing panel that sets place, time, and mood at once.'],
+  [24,'Ideation','The Turn',140,'Design a single image that holds a story reversal, before and after at once.'],
+  [30,'Study','Master Copy, Sequential',150,'Copy a page from a storyteller you admire. Study their pacing.'],
+  [38,'Composition','Page Layout Drama',160,'Lay out a page where panel size and shape carry the tension.'],
+  [48,'Drawing','One-Page Story',175,'Complete a finished single-page comic in one session.'],
+  [60,'Composition','Full Sequence',200,'Compose a finished multi-panel sequence with deliberate pacing.'],
+  [75,'Mastery','Need the Next Page',225,'Finish a piece that makes the viewer need the next page.'],
+  [90,'Mastery','Loreweaver Ascendant',260,'Finish a sequence that tells its story without a word of help.']
+ ])
+};
+
+
+/* =========================================================
+   DISCIPLINE SIGILS, hand-built occult marks, one per craft.
+   Drawn on a 0 0 64 64 field, inheriting the build accent via
+   currentColor. Used on build cards, skill-tree nodes, the
+   detail emblem, and level-up toasts.
+   ========================================================= */
+const SIGILS={
+ /* Revenant · Dark Artist — warding eye beneath a broken crescent, a single tear */
+ revenant:`<path d="M16 17 A18 18 0 1 0 16 47 A13 13 0 0 1 16 17Z" fill="currentColor" stroke="none" opacity=".9"/><path d="M19 34 Q32 25 45 34 Q32 43 19 34Z"/><circle cx="32" cy="34" r="4.2" fill="currentColor" stroke="none"/><path d="M32 47 L32 55 M28 52 L32 57 L36 52"/>`,
+ /* Tideshaper · Watercolor — ringed sigil over three breaking waves */
+ tideshaper:`<circle cx="32" cy="32" r="18"/><circle cx="32" cy="18" r="2.4" fill="currentColor" stroke="none"/><path d="M16 30 q5 -6 10 0 t10 0 t9 0"/><path d="M16 38 q5 -6 10 0 t10 0 t9 0"/>`,
+ /* Elementalist · Colored Pencil — interlocked prisms, a hexagram facet */
+ elementalist:`<path d="M32 11 L50 42 L14 42 Z"/><path d="M32 53 L14 22 L50 22 Z"/><circle cx="32" cy="32" r="4.6"/>`,
+ /* Swordbreaker · Graphite — hatched diamond, the blade's whetstone */
+ swordbreaker:`<path d="M32 9 L53 32 L32 55 L11 32 Z"/><path d="M22 27 L42 27 M19 33 L45 33 M24 39 L40 39"/>`,
+ /* Nightscribe · Ink — quill nib above a fallen drop */
+ nightscribe:`<path d="M32 9 L42 35 L22 35 Z"/><path d="M32 19 L32 35"/><path d="M32 41 q-6 6 0 13 q6 -7 0 -13Z" fill="currentColor" stroke="none"/>`,
+ /* Alchemist · Acrylic — alembic: vessel crowned by a circle */
+ alchemist:`<circle cx="32" cy="23" r="11"/><path d="M22 30 L42 30 L37 52 L27 52 Z"/><path d="M27 41 L37 41"/>`,
+ /* Aethermancer · Digital — nested rhombus circuit, four lit nodes */
+ aethermancer:`<path d="M32 8 L54 32 L32 56 L10 32 Z"/><path d="M32 20 L44 32 L32 44 L20 32 Z"/><circle cx="32" cy="8" r="2.8" fill="currentColor" stroke="none"/><circle cx="54" cy="32" r="2.8" fill="currentColor" stroke="none"/><circle cx="32" cy="56" r="2.8" fill="currentColor" stroke="none"/><circle cx="10" cy="32" r="2.8" fill="currentColor" stroke="none"/>`,
+ /* Runesmith · Graphic Designer — sealed hexagonal rune */
+ runesmith:`<path d="M32 9 L52 20.5 L52 43.5 L32 55 L12 43.5 L12 20.5 Z"/><path d="M32 19 L32 45 M22 25 L42 39 M42 25 L22 39"/>`,
+ /* Lumenwright · Oil — the radiant eye of light */
+ lumenwright:`<circle cx="32" cy="32" r="10.5"/><path d="M32 6 L32 15 M32 49 L32 58 M6 32 L15 32 M49 32 L58 32 M14 14 L20 20 M44 44 L50 50 M50 14 L44 20 M20 44 L14 50"/>`,
+ /* Etchwarden · Hyperdetailing — fine cross-hatch within a turned square */
+ etchwarden:`<rect x="14" y="14" width="36" height="36" rx="3" transform="rotate(45 32 32)"/><path d="M24 32 L40 32 M27 27 L37 27 M27 37 L37 37 M32 24 L32 40"/>`,
+ /* Worldsmith · Concept Artist — an orbited world, a kindling star */
+ worldsmith:`<circle cx="30" cy="34" r="12"/><ellipse cx="30" cy="34" rx="23" ry="9" transform="rotate(-26 30 34)"/><path d="M47 11 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2Z" fill="currentColor" stroke="none"/>`,
+ /* Loreweaver · Storyteller — an open grimoire, clasped */
+ loreweaver:`<path d="M32 19 L32 51"/><path d="M32 19 C26 14 17 14 12 18 L12 46 C17 42 26 42 32 47"/><path d="M32 19 C38 14 47 14 52 18 L52 46 C47 42 38 42 32 47"/><circle cx="32" cy="13" r="3.2" fill="currentColor" stroke="none"/>`,
+ _:`<path d="M32 10 L39 26 L56 28 L43 39 L47 56 L32 47 L17 56 L21 39 L8 28 L25 26Z"/>`
+};
+function sigil(id){
+  return `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${SIGILS[id]||SIGILS._}</svg>`;
+}
+
+/* =========================================================
+   UI ICONS, one consistent hand-drawn line-art set,
+   same 0 0 64 64 field and stroke language as the sigils.
+   Use icon('name') anywhere a glyph is needed.
+   ========================================================= */
+const ICONS={
+ /* observatory — a ringed star, the watchtower's eye */
+ observatory:`<circle cx="32" cy="32" r="9"/><path d="M32 6 L32 15 M32 49 L32 58 M6 32 L15 32 M49 32 L58 32 M13 13 L19 19 M45 45 L51 51 M51 13 L45 19 M19 45 L13 51"/><circle cx="32" cy="32" r="20" stroke-dasharray="2 5"/>`,
+ /* atelier — crossed brush & pen over a node */
+ atelier:`<path d="M16 48 L34 30 M28 14 L50 36 L44 42 L22 20Z"/><path d="M16 48 L20 44 M16 48 L24 50 L26 42"/><circle cx="44" cy="20" r="3.4" fill="currentColor" stroke="none"/>`,
+ /* commissions — sealed letter with a wax mark */
+ commissions:`<rect x="12" y="17" width="40" height="30" rx="2.5"/><path d="M12 19 L32 35 L52 19"/><circle cx="32" cy="44" r="5" fill="currentColor" stroke="none"/>`,
+ /* mood→color — droplet split light/dark */
+ mood:`<path d="M32 9 C20 26 16 34 16 42 a16 16 0 0 0 32 0 C48 34 44 26 32 9Z"/><path d="M32 9 C20 26 16 34 16 42 a16 16 0 0 0 16 16Z" fill="currentColor" stroke="none" opacity=".55"/>`,
+ /* conjurer — a four-point spark in a ring */
+ conjure:`<circle cx="32" cy="32" r="21"/><path d="M32 17 L35.5 28.5 L47 32 L35.5 35.5 L32 47 L28.5 35.5 L17 32 L28.5 28.5Z" fill="currentColor" stroke="none"/>`,
+ /* board — stacked images / mood board */
+ board:`<rect x="11" y="13" width="26" height="26" rx="2.5"/><rect x="27" y="25" width="26" height="26" rx="2.5"/><path d="M16 33 L22 27 L27 32"/>`,
+ /* library — an open tome */
+ library:`<path d="M32 18 L32 50"/><path d="M32 18 C26 13 16 13 11 17 L11 45 C16 41 26 41 32 46"/><path d="M32 18 C38 13 48 13 53 17 L53 45 C48 41 38 41 32 46"/>`,
+ /* about — a quill */
+ about:`<path d="M48 14 C34 18 22 30 17 47 C29 45 43 33 48 14Z"/><path d="M17 47 L26 38 M14 50 L20 44"/>`,
+ /* exercise / rite — a flame */
+ rite:`<path d="M32 8 C38 20 46 24 46 36 a14 14 0 0 1 -28 0 C18 27 24 25 26 18 C30 23 30 28 32 28 C34 26 33 16 32 8Z"/>`,
+ /* skill tree — branching nodes */
+ tree:`<circle cx="32" cy="14" r="4.6"/><circle cx="16" cy="46" r="4.6"/><circle cx="48" cy="46" r="4.6"/><path d="M32 18.5 L32 30 M32 30 L16 41.4 M32 30 L48 41.4"/>`,
+ /* patron — a crown */
+ patron:`<path d="M12 44 L17 20 L27 34 L32 16 L37 34 L47 20 L52 44Z"/><path d="M12 44 L52 44"/>`,
+ /* check / done — a sealed mark */
+ check:`<circle cx="32" cy="32" r="22"/><path d="M21 33 L28 41 L44 23"/>`,
+ /* lock */
+ lock:`<rect x="15" y="29" width="34" height="24" rx="3"/><path d="M23 29 L23 21 a9 9 0 0 1 18 0 L41 29"/><circle cx="32" cy="40" r="3.2" fill="currentColor" stroke="none"/>`,
+ /* spark — small accent star */
+ spark:`<path d="M32 10 L36 28 L54 32 L36 36 L32 54 L28 36 L10 32 L28 28Z"/>`,
+ /* tag / type */
+ tag:`<path d="M30 12 L52 12 L52 34 L30 56 L8 34Z"/><circle cx="42" cy="22" r="4" fill="currentColor" stroke="none"/>`,
+ /* coin / budget */
+ coin:`<circle cx="32" cy="32" r="21"/><path d="M32 20 L32 44 M26 25 a6 5 0 0 1 0 14 M38 25 a6 5 0 0 0 0 14" />`,
+ /* upload */
+ upload:`<path d="M32 42 L32 13 M21 24 L32 12 L43 24"/><path d="M14 40 L14 52 L50 52 L50 40"/>`,
+ /* download / save */
+ download:`<path d="M32 12 L32 41 M21 30 L32 42 L43 30"/><path d="M14 40 L14 52 L50 52 L50 40"/>`,
+ /* link */
+ link:`<path d="M27 37 L37 27"/><path d="M30 20 L36 14 a10 10 0 0 1 14 14 L44 34"/><path d="M34 44 L28 50 a10 10 0 0 1 -14 -14 L20 30"/>`,
+ /* trash / dismiss */
+ trash:`<path d="M16 20 L48 20 M26 20 L26 14 L38 14 L38 20 M20 20 L22 52 L42 52 L44 20 M28 28 L29 44 M36 28 L35 44"/>`,
+ _:`<path d="M32 10 L39 26 L56 28 L43 39 L47 56 L32 47 L17 56 L21 39 L8 28 L25 26Z"/>`
+};
+function icon(id){
+  return `<svg class="ui-ic" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[id]||ICONS._}</svg>`;
+}
+
+const BUILDS=[
+{id:'revenant',title:'Revenant',disc:'Dark Artist',bc:'#d12b3f',
+ blurb:'Channel shadow and dread. Master the absence of light and the craft of unease.',
+ nodes:nodes([
+  [1,'Pact of Shadow','Render pure black without losing the form beneath it.'],
+  [4,'Gloomwork','Build atmosphere through a low-key value structure.'],
+  [9,'The Hollow Eye','Design focal points the eye cannot rest upon.'],
+  [15,'Marrow & Ash','Render the textures of decay, bone, rot, ruin.'],
+  [22,'Veil of Dread','Compose negative space itself as a threat.'],
+  [30,'Necrotic Palette','Bind color to death, bruise, mold, candleflame.'],
+  [40,'The Long Dark','Sustain a single dread mood across a full series.'],
+  [55,'Eclipse Doctrine','Stage light as a rare, sacred, fragile event.'],
+  [72,'Revenant Ascendant','Your darkness is unmistakably, only yours.']])},
+
+{id:'tideshaper',title:'Tideshaper',disc:'Watercolor Artist',bc:'#56cabd',
+ blurb:'Surrender control to water. Guide the pigment without ever commanding it.',
+ nodes:nodes([
+  [1,'First Wash','Lay a flat, even wash with no blooms.'],
+  [4,'Wet Communion','Coax wet-into-wet bleeds with intent.'],
+  [9,'Reserved Light','Plan and preserve the white of the paper.'],
+  [15,'Granulation Rites','Exploit pigment settling for living texture.'],
+  [22,'Layered Glaze','Stack transparent washes into true depth.'],
+  [30,"Tideshaper's Restraint",'Know the one stroke that must be left alone.'],
+  [40,'Storm & Stillness','Balance loose chaos against crisp edges.'],
+  [55,'Salt & Spirit','Master lifting, salt, alcohol, and resists.'],
+  [72,'Tideshaper Ascendant','Water answers to your hand alone.']])},
+
+{id:'elementalist',title:'Elementalist',disc:'Colored Pencil Artist',bc:'#d98ad0',
+ blurb:'Layer raw color into light. Burnish pigment until the surface itself glows.',
+ nodes:nodes([
+  [1,'First Layer','Apply even, light-pressure layers.'],
+  [4,'Optical Mixing','Build secondary colors by layering primaries.'],
+  [9,'Burnish Rite','Compress layers into a glassy, polished finish.'],
+  [15,'Tooth & Grain','Read and exploit the texture of the paper.'],
+  [22,'Solvent Craft','Blend with odorless mineral spirits.'],
+  [30,'Spectral Command','Push pencil into impossible saturation.'],
+  [40,'Underpainting','Map value fully before any color falls.'],
+  [55,'Glow Doctrine','Make a light source truly seem to emit.'],
+  [72,'Elementalist Ascendant','Wax becomes radiance under your hand.']])},
+
+{id:'swordbreaker',title:'Swordbreaker',disc:'Graphite Artist',bc:'#9aa6b8',
+ blurb:'The blade of the pencil. Precision, value, and the long discipline of grey.',
+ nodes:nodes([
+  [1,'Sharpened Will','Control line weight and pressure at will.'],
+  [4,'The Grey Ladder','Render a clean nine-step value scale.'],
+  [9,'Form Forging','Turn form with hatching and blending.'],
+  [15,'Edge Doctrine','Command hard, soft, and lost edges.'],
+  [22,'Graphite Reflection','Render metal and reflective surfaces.'],
+  [30,"Swordbreaker's Eye",'See the value hidden beneath every color.'],
+  [40,'Portrait Steel','Capture a true likeness in pure value.'],
+  [55,'Drama of Grey','Stage high-contrast, cinematic scenes.'],
+  [72,'Swordbreaker Ascendant','Grey alone tells the whole tale.']])},
+
+{id:'nightscribe',title:'Nightscribe',disc:'Ink Artist',bc:'#6b5cc8',
+ blurb:'Commit with no undo. Ink is a decision made permanent on the page.',
+ nodes:nodes([
+  [1,'First Mark','Lay confident, unhesitant lines.'],
+  [4,'Hatch & Cross','Build value through hatching systems.'],
+  [9,'Spot Blacks','Design bold black shapes for impact.'],
+  [15,'Stipple Patience','Render gradients in pure dots.'],
+  [22,'Line Weight Law','Vary weight to carry depth and light.'],
+  [30,"Nightscribe's Nerve",'Ink with zero pencil underdrawing.'],
+  [40,'Texture Lexicon','Invent a mark-system for any surface.'],
+  [55,'Brush & Nib','Master both brush-ink and rigid nib.'],
+  [72,'Nightscribe Ascendant','Every line falls final and true.']])},
+
+{id:'alchemist',title:'Alchemist',disc:'Acrylic Painter',bc:'#4f9e6e',
+ blurb:'Fast-drying, unforgiving, transmutative. Work in haste; build in layers.',
+ nodes:nodes([
+  [1,'Base Coat','Block in flat color fields, fast.'],
+  [4,'Open Time','Manage drying with the right mediums.'],
+  [9,'Opaque Layering','Stack opaque corrections cleanly.'],
+  [15,'Wet Blend Window','Blend before the surface sets.'],
+  [22,'Texture Medium','Build impasto and physical body.'],
+  [30,"Alchemist's Speed",'Finish a complete study in one sitting.'],
+  [40,'Glaze & Scumble','Modulate with thin transmutations.'],
+  [55,'Hard Edge Doctrine','Master tape, masking, and crisp form.'],
+  [72,'Alchemist Ascendant','Speed itself becomes your mastery.']])},
+
+{id:'aethermancer',title:'Aethermancer',disc:'Digital Painter / Illustrator',bc:'#4f8fc4',
+ blurb:'Paint with light itself, layers, undo, and an infinite well of pigment.',
+ nodes:nodes([
+  [1,'Canvas Sigil','Set up files, brushes, and shortcuts.'],
+  [4,'Layer Doctrine','Wield layers, masks, and modes with intent.'],
+  [9,'Value Block','Paint fully in greyscale before color.'],
+  [15,'Custom Brush','Build and tame a personal brush set.'],
+  [22,'Light & Glow','Render emissive light and bloom.'],
+  [30,"Aethermancer's Flow",'Paint without leaning on the undo key.'],
+  [40,'Photobash Rite','Integrate texture and 3D seamlessly.'],
+  [55,'Rendering Mastery','Hold a finish across every material.'],
+  [72,'Aethermancer Ascendant','The screen obeys your every intent.']])},
+
+{id:'runesmith',title:'Runesmith',disc:'Graphic Designer',bc:'#c9802e',
+ blurb:'Forge meaning into marks. Type, grid, and the cold geometry of clarity.',
+ nodes:nodes([
+  [1,'The Grid','Compose on a structured, deliberate grid.'],
+  [4,'Type Pairing','Pair fonts with hierarchy and contrast.'],
+  [9,'Negative Space','Design with what you choose to leave empty.'],
+  [15,'Mark Forging','Reduce a whole idea to a single symbol.'],
+  [22,'Color System','Build a constrained, intentional palette.'],
+  [30,"Runesmith's Eye",'Spot the one detail breaking the layout.'],
+  [40,'Layout Rhythm','Control pace across a multi-page system.'],
+  [55,'Brand Doctrine','Forge a cohesive, living identity.'],
+  [72,'Runesmith Ascendant','Every mark you set carries weight.']])},
+
+{id:'lumenwright',title:'Lumenwright',disc:'Oil Painter',bc:'#d99a4e',
+ blurb:'The slow craft of light, glaze, blend, and build luminance over time.',
+ nodes:nodes([
+  [1,'Ground & Tone','Prepare a toned, considered ground.'],
+  [4,'Fat Over Lean','Layer correctly for a stable painting.'],
+  [9,'Form Modeling','Turn form with soft oil blends.'],
+  [15,'Underpainting','Establish value in monochrome first.'],
+  [22,'Glaze Doctrine','Build depth with transparent glazes.'],
+  [30,"Lumenwright's Patience",'Let a painting cure, then return to it.'],
+  [40,'Edges & Air','Lose edges gently into atmosphere.'],
+  [55,'Flesh & Light','Render luminous, living skin.'],
+  [72,'Lumenwright Ascendant','Light seems to rise from within the work.']])},
+
+{id:'etchwarden',title:'Etchwarden',disc:'Hyperdetailing Artist',bc:'#cdbf9a',
+ blurb:'Obsession as discipline. Render the texture of the world, pore by pore.',
+ nodes:nodes([
+  [1,'Slow Hand','Sustain steady, controlled rendering.'],
+  [4,'Reference Rite','Read high-resolution reference deeply.'],
+  [9,'Texture Pass','Render micro-texture without losing form.'],
+  [15,'Patience Doctrine','Work a single passage to completion.'],
+  [22,'Edge Precision','Hold the crispest edges, cleanly.'],
+  [30,"Etchwarden's Focus",'Render four hours without the eye drifting.'],
+  [40,'Surface Lexicon','Master skin, metal, glass, fabric, hair.'],
+  [55,'Detail Hierarchy','Detail with restraint, guide the eye.'],
+  [72,'Etchwarden Ascendant','The surface breathes with quiet truth.']])},
+
+{id:'worldsmith',title:'Worldsmith',disc:'Concept Artist',bc:'#8b6cff',
+ blurb:'From vision, worlds rise. Design what has never been, and make it believable.',
+ nodes:nodes([
+  [1,'Thumbnail Storm','Generate fast, loose idea thumbnails.'],
+  [4,'Shape Language','Encode meaning into pure silhouette.'],
+  [9,'Believable Function','Design things that look like they work.'],
+  [15,'Environment Logic','Build worlds with consistent rules.'],
+  [22,'Mood & Key','Set tone through deliberate lighting keys.'],
+  [30,"Worldsmith's Vision",'Design a coherent, living world bible.'],
+  [40,'Callout Sheets','Communicate a design for production.'],
+  [55,'Story in a Frame','Make one image imply an entire tale.'],
+  [72,'Worldsmith Ascendant','Your invented worlds feel inevitable.']])},
+
+{id:'loreweaver',title:'Loreweaver',disc:'Storyteller',bc:'#bb5a8f',
+ blurb:'Art that speaks. Sequence, character, and the slow spell of narrative.',
+ nodes:nodes([
+  [1,'The Hook','Open a story image with true intrigue.'],
+  [4,'Character Read','Design figures that read at a glance.'],
+  [9,'Staging','Block a scene for clear storytelling.'],
+  [15,'Sequential Flow','Guide the eye cleanly across panels.'],
+  [22,'Expression Craft','Render emotion with precision.'],
+  [30,"Loreweaver's Voice",'Tell a three-beat story in images alone.'],
+  [40,'Pacing Doctrine','Control rhythm across a full sequence.'],
+  [55,'Theme & Symbol','Weave meaning beneath the surface.'],
+  [72,'Loreweaver Ascendant','Your images haunt and linger long after.']])}
+];
+const BUILD_MAP={}; BUILDS.forEach(b=>BUILD_MAP[b.id]=b);
+
+const ADVANCED=[
+ {name:'Necromythos',fuse:'Revenant × Loreweaver',bc:'#d12b3f',
+  desc:'Dark narrative art, images that tell doomed, beautiful stories.'},
+ {name:'Stormcaller',fuse:'Tideshaper × Aethermancer',bc:'#56cabd',
+  desc:'Mixed-media fluidity, the soul of watercolor inside the digital canvas.'},
+ {name:'Reliquarian',fuse:'Etchwarden × Lumenwright',bc:'#d99a4e',
+  desc:'Hyperreal oil rendering of sacred, weathered, impossible objects.'},
+ {name:'Architect of Aeons',fuse:'Worldsmith × Runesmith',bc:'#8b6cff',
+  desc:'Worldbuilding fused with systematic design, civilizations with a brand.'},
+ {name:'Chromaticon',fuse:'Elementalist × Nightscribe',bc:'#d98ad0',
+  desc:'Explosive, layered color bound and held by decisive ink.'},
+ {name:'Demiurge',fuse:'Alchemist × Worldsmith',bc:'#4f9e6e',
+  desc:'Rapid creation, entire visual worlds summoned in a single sitting.'}
+];
+
+
+const LIBRARY=[
+ {tag:'Digital · Free',name:'Krita',desc:'Open-source painting studio for digital artists.',url:'https://krita.org'},
+ {tag:'3D · Concept',name:'Blender',desc:'Free 3D suite, modeling, sculpting, scene blockouts.',url:'https://www.blender.org'},
+ {tag:'Reference',name:'PureRef',desc:'Floating reference boards that stay on top while you work.',url:'https://www.pureref.com'},
+ {tag:'Gesture',name:'Line of Action',desc:'Timed figure & gesture drawing practice sessions.',url:'https://line-of-action.com'},
+ {tag:'Color',name:'Adobe Color',desc:'Build, extract, and test color harmonies.',url:'https://color.adobe.com'},
+ {tag:'Color',name:'Coolors',desc:'Fast palette generator and explorer.',url:'https://coolors.co'},
+ {tag:'Community',name:'ArtStation',desc:'Portfolios, learning, and industry-standard work.',url:'https://www.artstation.com'},
+ {tag:'Traditional',name:'Blick Art Materials',desc:'Deep catalog of traditional supplies and tools.',url:'https://www.dickblick.com'},
+ {tag:'Practice',name:'Quickposes',desc:'Quick pose reference for figure timing drills.',url:'https://quickposes.com'}
+];
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const KEY='ag_state_v1';
+const DEFAULT={
+  profile:{name:'',email:''},
+  builds:{}, done:[], patron:'',
+  flags:{advanced:false},
+  commerce:{name:'',email:'',rates:'',turnaround:'',deposit:'',terms:'',note:'',status:'open'},
+  commissions:[], acPalettes:[], library:[]
+};
+let S;
+function load(){
+  try{S=JSON.parse(localStorage.getItem(KEY))||null;}catch(e){S=null;}
+  if(!S) S=JSON.parse(JSON.stringify(DEFAULT));
+  for(const k in DEFAULT) if(!(k in S)) S[k]=JSON.parse(JSON.stringify(DEFAULT[k]));
+  BUILDS.forEach(b=>{
+    if(!S.builds[b.id]) S.builds[b.id]={xp:0};
+    /* rite archive: completed[] holds pool indices in completion order,
+       favs[] holds favorited indices */
+    if(!S.builds[b.id].completed) S.builds[b.id].completed=[];
+    if(!S.builds[b.id].favs) S.builds[b.id].favs=[];
+    if(!S.builds[b.id].active) S.builds[b.id].active=[];
+  });
+}
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
+load();
+
+function reqFor(level){ return 40 + level*10; }
+function levelInfo(xp){
+  let lvl=1, rem=xp;
+  while(lvl<99 && rem>=reqFor(lvl)){ rem-=reqFor(lvl); lvl++; }
+  const need=lvl<99?reqFor(lvl):0;
+  return {level:lvl,into:rem,need,pct:need?Math.min(1,rem/need):1};
+}
+function buildLevel(id){ return levelInfo(S.builds[id].xp).level; }
+
+/* ---- rite pool logic ----
+   active rites = a held set of up to 4 the artist can tackle in
+   any order. Completing one frees its slot; a fresh rite is then
+   drawn at random from the unlocked, unfinished pool. The set is
+   persisted so slots stay stable between renders. */
+function ritesRefill(buildId){
+  const pool=RITES[buildId]||[];
+  const st=S.builds[buildId];
+  if(!st.active) st.active=[];
+  const lvl=buildLevel(buildId);
+  /* drop any held rite that has since been completed */
+  st.active=st.active.filter(i=>!st.completed.includes(i));
+  /* candidate pool: unlocked, not completed, not already held */
+  const heldOrDone=new Set([...st.active,...st.completed]);
+  let pickable=pool.filter(r=>r.t<=lvl && !heldOrDone.has(r.idx));
+  /* fill empty slots with random unlocked rites */
+  while(st.active.length<4 && pickable.length){
+    const k=Math.floor(Math.random()*pickable.length);
+    st.active.push(pickable[k].idx);
+    pickable.splice(k,1);
+  }
+  /* if still short (everything unlocked is held/done), surface
+     the soonest locked rites so the card is never bare */
+  if(st.active.length<4){
+    const held2=new Set([...st.active,...st.completed]);
+    pool.filter(r=>r.t>lvl && !held2.has(r.idx))
+        .sort((a,b)=>a.t-b.t)
+        .slice(0,4-st.active.length)
+        .forEach(r=>st.active.push(r.idx));
+  }
+}
+function ritesActive(buildId){
+  ritesRefill(buildId);
+  const pool=RITES[buildId]||[];
+  return S.builds[buildId].active.map(i=>pool[i]).filter(Boolean);
+}
+function ritesArchive(buildId){
+  const pool=RITES[buildId]||[];
+  return S.builds[buildId].completed
+    .map(i=>pool[i]).filter(Boolean);
+}
+function riteIsFav(buildId,idx){ return S.builds[buildId].favs.includes(idx); }
+
+function totalMastery(){ return BUILDS.reduce((s,b)=>s+buildLevel(b.id),0); }
+function pathsWalked(){ return BUILDS.filter(b=>S.builds[b.id].xp>0).length; }
+function highestPath(){
+  let top=null,tl=0;
+  BUILDS.forEach(b=>{const l=buildLevel(b.id); if(l>tl){tl=l;top=b;}});
+  return top&&tl>1?`${top.title} ${tl}`:'';
+}
+function rankTitle(m){
+  if(m>=600) return 'Grand Magus of Craft';
+  if(m>=380) return 'Archmage of the Atelier';
+  if(m>=220) return 'Master of Many Hands';
+  if(m>=110) return 'Adept of the Grimoire';
+  if(m>=40)  return 'Journeyman Scribe';
+  if(m>=14)  return 'Initiate of the Page';
+  return 'Apprentice of the Hollow Page';
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+function toast(glyph,title,msg){
+  const stack=document.getElementById('toast-stack');
+  const el=document.createElement('div');
+  el.className='toast';
+  el.innerHTML=`<div class="tg">${glyph}</div><div class="tt"><b>${title}</b><span>${msg||''}</span></div>`;
+  stack.appendChild(el);
+  setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),350);},3400);
+}
+
+/* =========================================================
+   ROUTING
+   ========================================================= */
+function isPocket(){ return /[?&]pocket=1/.test(location.search)||location.hash==='#pocket'; }
+function showView(name){
+  document.querySelectorAll('#mainapp .view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('on',t.dataset.view===name));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(name==='observatory') renderObservatory();
+  if(name==='atelier') renderAtelier();
+  if(name==='commissions') renderCommissions();
+}
+document.querySelectorAll('.nav-tab').forEach(t=>{
+  t.addEventListener('click',()=>showView(t.dataset.view));
+});
+
+/* =========================================================
+   LANDING -> APP
+   ========================================================= */
+function openApp(){
+  document.getElementById('landing').classList.remove('active');
+  document.getElementById('landing').style.display='none';
+  document.getElementById('mainapp').style.display='block';
+  renderTopbar();
+  showView('observatory');
+}
+document.getElementById('enterBtn').addEventListener('click',()=>{
+  if(S.profile.name){ openApp(); }
+  else{ document.getElementById('nameModal').classList.add('show');
+    setTimeout(()=>document.getElementById('modalNameInput').focus(),100); }
+});
+document.getElementById('modalEnter').addEventListener('click',()=>{
+  const v=document.getElementById('modalNameInput').value.trim();
+  finishLogin(v||'Wandering Artist','');
+});
+document.getElementById('modalNameInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter') document.getElementById('modalEnter').click();
+});
+
+/* shared finish: store profile, close modal, open app */
+function finishLogin(name,email){
+  S.profile.name=name||'Wandering Artist';
+  S.profile.email=email||'';
+  if(!S.commerce.name) S.commerce.name=S.profile.name;
+  if(!S.commerce.email&&email) S.commerce.email=email;
+  save();
+  document.getElementById('nameModal').classList.remove('show');
+  openApp();
+  toast(icon('spark'),'The grimoire opens','Welcome, '+S.profile.name+'.');
+}
+/* Google — uses real Google Identity Services when a client ID is set,
+   otherwise points the keeper to the artist-name field. */
+document.getElementById('googleLogin').addEventListener('click',()=>{
+  if(GOOGLE_CLIENT_ID){
+    try{
+      google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:onGoogle});
+      google.accounts.id.prompt(); return;
+    }catch(e){}
+  }
+  document.getElementById('modalNameInput').focus();
+  toast(icon('spark'),'Google sign-in','Add a Google client ID in the code to enable it: for now, enter an artist name.');
+});
+/* Apple — wire up Sign in with Apple JS to make this live; until then
+   it points the keeper to the artist-name field. */
+document.getElementById('appleLogin').addEventListener('click',()=>{
+  document.getElementById('modalNameInput').focus();
+  toast(icon('spark'),'Apple sign-in','Configure Sign in with Apple to enable it: for now, enter an artist name.');
+});
+function onGoogle(resp){
+  try{
+    const p=JSON.parse(atob(resp.credential.split('.')[1]));
+    finishLogin(p.name||'Artist',p.email||'');
+  }catch(e){}
+}
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+function renderTopbar(){
+  const m=totalMastery();
+  document.getElementById('rkTitle').textContent=rankTitle(m);
+  document.getElementById('rkLevel').textContent='Mastery '+m;
+}
+
+/* =========================================================
+   OBSERVATORY
+   ========================================================= */
+function swatchRow(colors){
+  return `<div class="swatches">`+colors.map(c=>
+    `<div class="sw" style="background:${c}" data-hex="${c}"><span>${c.toUpperCase()}</span></div>`
+  ).join('')+`</div><div class="swatch-hint">Tap a swatch to copy its hex.</div>`;
+}
+function paintPalette(targetId,name,colors,note){
+  const el=document.getElementById(targetId);
+  el.innerHTML=`<div class="palette-name">${name}</div>`+swatchRow(colors)
+    +(note?`<div class="palette-note">${note}</div>`:'');
+  el.querySelectorAll('.sw').forEach(s=>{
+    s.addEventListener('click',()=>{
+      const hex=s.dataset.hex;
+      navigator.clipboard&&navigator.clipboard.writeText(hex);
+      toast(icon('mood'),'Hex copied',hex.toUpperCase()+' is on your clipboard.');
+    });
+  });
+}
+function cap(s){return s.replace(/\b\w/g,c=>c.toUpperCase());}
+
+/* =========================================================
+   CHROMATOLOGY  ·  extract a true palette from any image.
+   Uses median-cut quantisation, the image's colours are
+   loaded into a box, the box is split along its widest
+   channel again and again until there are N boxes, and each
+   box yields its average colour. Pure pixel maths, offline.
+   ========================================================= */
+const CHROMA={img:null,count:8,points:[],sampleCanvas:null};
+
+/* extract N colours via median-cut, AND return a representative
+   image position for each, so a draggable sampling dot can be
+   placed where that colour was found. Positions are normalised
+   0..1 (x,y) relative to the image. */
+function chromaExtract(imgEl,n){
+  const MAX=160;
+  const ratio=Math.min(MAX/imgEl.naturalWidth,MAX/imgEl.naturalHeight,1);
+  const w=Math.max(1,Math.round(imgEl.naturalWidth*ratio));
+  const h=Math.max(1,Math.round(imgEl.naturalHeight*ratio));
+  const cv=document.createElement('canvas');
+  cv.width=w; cv.height=h;
+  const ctx=cv.getContext('2d');
+  ctx.drawImage(imgEl,0,0,w,h);
+  let data;
+  try{ data=ctx.getImageData(0,0,w,h).data; }
+  catch(e){ return null; }
+  /* collect pixels WITH their normalised positions */
+  const px=[];
+  for(let i=0;i<data.length;i+=4){
+    if(data[i+3]<125) continue;
+    const idx=i/4;
+    const x=(idx%w)/w, y=Math.floor(idx/w)/h;
+    px.push([data[i],data[i+1],data[i+2],x,y]);
+  }
+  if(!px.length) return null;
+
+  function widestChannel(box){
+    let mn=[255,255,255],mx=[0,0,0];
+    for(const p of box) for(let c=0;c<3;c++){
+      if(p[c]<mn[c])mn[c]=p[c]; if(p[c]>mx[c])mx[c]=p[c];
+    }
+    const r=mx[0]-mn[0],g=mx[1]-mn[1],b=mx[2]-mn[2];
+    return r>=g&&r>=b?0:(g>=b?1:2);
+  }
+  let boxes=[px];
+  while(boxes.length<n){
+    let idx=-1,best=-1;
+    for(let i=0;i<boxes.length;i++){
+      if(boxes[i].length>1&&boxes[i].length>best){best=boxes[i].length;idx=i;}
+    }
+    if(idx<0) break;
+    const box=boxes[idx];
+    const ch=widestChannel(box);
+    box.sort((a,b)=>a[ch]-b[ch]);
+    const mid=box.length>>1;
+    boxes.splice(idx,1,box.slice(0,mid),box.slice(mid));
+  }
+  /* for each box: average colour + the position of the pixel
+     closest to that average (a real spot on the image) */
+  const out=boxes.map(box=>{
+    let r=0,g=0,b=0;
+    for(const p of box){r+=p[0];g+=p[1];b+=p[2];}
+    const k=box.length;
+    const ar=Math.round(r/k),ag=Math.round(g/k),ab=Math.round(b/k);
+    let bestD=Infinity,bx=0.5,by=0.5;
+    for(const p of box){
+      const d=(p[0]-ar)**2+(p[1]-ag)**2+(p[2]-ab)**2;
+      if(d<bestD){bestD=d;bx=p[3];by=p[4];}
+    }
+    return {rgb:[ar,ag,ab],x:bx,y:by};
+  });
+  /* order by luminance, dark -> light */
+  out.sort((a,b)=>(a.rgb[0]*0.299+a.rgb[1]*0.587+a.rgb[2]*0.114)
+                 -(b.rgb[0]*0.299+b.rgb[1]*0.587+b.rgb[2]*0.114));
+  return out;
+}
+
+/* rgb -> hex / hsl strings */
+function rgbHex(r,g,b){
+  return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase();
+}
+function rgbToHsl(r,g,b){
+  r/=255;g/=255;b/=255;
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;
+  let hh=0,s=0,l=(mx+mn)/2;
+  if(d){
+    s=l>0.5?d/(2-mx-mn):d/(mx+mn);
+    if(mx===r) hh=((g-b)/d+(g<b?6:0));
+    else if(mx===g) hh=(b-r)/d+2;
+    else hh=(r-g)/d+4;
+    hh*=60;
+  }
+  return [Math.round(hh),Math.round(s*100),Math.round(l*100)];
+}
+
+/* prepare a full-resolution sampling canvas once per image, so
+   dragging a dot reads the true pixel colour under it */
+function chromaPrepSampler(imgEl){
+  const MAXS=900; /* cap for memory, plenty for sampling */
+  const ratio=Math.min(MAXS/imgEl.naturalWidth,MAXS/imgEl.naturalHeight,1);
+  const w=Math.max(1,Math.round(imgEl.naturalWidth*ratio));
+  const h=Math.max(1,Math.round(imgEl.naturalHeight*ratio));
+  const cv=document.createElement('canvas');
+  cv.width=w; cv.height=h;
+  const ctx=cv.getContext('2d',{willReadFrequently:true});
+  ctx.drawImage(imgEl,0,0,w,h);
+  CHROMA.sampleCanvas=cv;
+  CHROMA.sampleCtx=ctx;
+  CHROMA.sampleW=w; CHROMA.sampleH=h;
+}
+/* read the colour at normalised (x,y) from the sampler */
+function chromaSampleAt(x,y){
+  if(!CHROMA.sampleCtx) return [128,128,128];
+  const px=Math.max(0,Math.min(CHROMA.sampleW-1,Math.round(x*CHROMA.sampleW)));
+  const py=Math.max(0,Math.min(CHROMA.sampleH-1,Math.round(y*CHROMA.sampleH)));
+  try{
+    const d=CHROMA.sampleCtx.getImageData(px,py,1,1).data;
+    return [d[0],d[1],d[2]];
+  }catch(e){ return [128,128,128]; }
+}
+
+function chromaRender(){
+  const out=document.getElementById('chromaResult');
+  const stage=document.getElementById('chromaStage');
+  if(!CHROMA.img){ out.innerHTML=''; return; }
+  out.innerHTML=`<div class="chroma-loading">Reading the image…</div>`;
+  setTimeout(()=>{
+    chromaPrepSampler(CHROMA.img);
+    const found=chromaExtract(CHROMA.img,CHROMA.count);
+    if(!found){
+      out.innerHTML=`<div class="chroma-tip">Could not read that image, try another.</div>`;
+      return;
+    }
+    /* seed the draggable points from the algorithm's findings */
+    CHROMA.points=found.map(f=>({x:f.x,y:f.y,rgb:f.rgb.slice()}));
+    chromaBuildStage(stage);
+    chromaPaintResult(out);
+    const sv=document.getElementById('chromaSave');
+    if(sv) sv.style.display='block';
+  },30);
+}
+
+/* (re)build the image stage with draggable numbered dots */
+function chromaBuildStage(stage){
+  stage.innerHTML='';
+  const wrap=document.createElement('div');
+  wrap.className='chroma-pickwrap';
+  const img=document.createElement('img');
+  img.className='chroma-pickimg';
+  img.src=CHROMA.img.src;
+  img.alt='your image';
+  wrap.appendChild(img);
+  const layer=document.createElement('div');
+  layer.className='chroma-dots';
+  wrap.appendChild(layer);
+  stage.appendChild(wrap);
+
+  CHROMA.points.forEach((pt,i)=>{
+    const dot=document.createElement('div');
+    dot.className='chroma-dot';
+    dot.style.left=(pt.x*100)+'%';
+    dot.style.top=(pt.y*100)+'%';
+    dot.style.background=rgbHex(pt.rgb[0],pt.rgb[1],pt.rgb[2]);
+    dot.innerHTML='<span>'+(i+1)+'</span>';
+    dot.dataset.i=i;
+    layer.appendChild(dot);
+    chromaWireDot(dot,wrap,i);
+  });
+}
+
+/* drag handling for one dot, live-sampling as it moves */
+function chromaWireDot(dot,wrap,i){
+  let dragging=false;
+  function moveTo(clientX,clientY){
+    const r=wrap.getBoundingClientRect();
+    let x=(clientX-r.left)/r.width;
+    let y=(clientY-r.top)/r.height;
+    x=Math.max(0,Math.min(1,x)); y=Math.max(0,Math.min(1,y));
+    CHROMA.points[i].x=x; CHROMA.points[i].y=y;
+    const rgb=chromaSampleAt(x,y);
+    CHROMA.points[i].rgb=rgb;
+    dot.style.left=(x*100)+'%';
+    dot.style.top=(y*100)+'%';
+    dot.style.background=rgbHex(rgb[0],rgb[1],rgb[2]);
+    chromaPaintResult(document.getElementById('chromaResult'));
+  }
+  /* pointer events cover mouse + touch on iOS Safari */
+  dot.addEventListener('pointerdown',e=>{
+    e.preventDefault(); dragging=true;
+    dot.classList.add('grabbing');
+    dot.setPointerCapture&&dot.setPointerCapture(e.pointerId);
+  });
+  dot.addEventListener('pointermove',e=>{
+    if(!dragging) return;
+    e.preventDefault();
+    moveTo(e.clientX,e.clientY);
+  });
+  function end(e){
+    if(!dragging) return;
+    dragging=false; dot.classList.remove('grabbing');
+    dot.releasePointerCapture&&e&&dot.releasePointerCapture(e.pointerId);
+  }
+  dot.addEventListener('pointerup',end);
+  dot.addEventListener('pointercancel',end);
+}
+
+/* paint the swatch list + the live hex list for saving */
+function chromaPaintResult(out){
+  if(!out) return;
+  const pts=CHROMA.points;
+  CHROMA.lastColors=pts.map(p=>rgbHex(p.rgb[0],p.rgb[1],p.rgb[2]));
+  out.innerHTML=`<div class="chroma-swatches">`+pts.map((p,i)=>{
+    const hex=rgbHex(p.rgb[0],p.rgb[1],p.rgb[2]);
+    const hsl=rgbToHsl(p.rgb[0],p.rgb[1],p.rgb[2]);
+    return `<div class="cs-card" data-hex="${hex}">
+      <div class="cs-chip" style="background:${hex}"><span class="cs-num">${i+1}</span></div>
+      <div class="cs-codes">
+        <div class="cs-code"><span class="ck">HEX</span><span class="cv">${hex}</span></div>
+        <div class="cs-code"><span class="ck">RGB</span><span class="cv">${p.rgb[0]}, ${p.rgb[1]}, ${p.rgb[2]}</span></div>
+        <div class="cs-code"><span class="ck">HSL</span><span class="cv">${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%</span></div>
+      </div></div>`;
+  }).join('')+`</div><div class="chroma-tip">Drag the numbered dots on the image to refine. Tap a colour to copy its HEX.</div>`;
+  out.querySelectorAll('.cs-card').forEach(card=>{
+    card.addEventListener('click',()=>{
+      const hex=card.dataset.hex;
+      navigator.clipboard&&navigator.clipboard.writeText(hex);
+      toast(icon('mood'),'Colour copied',hex+' is on your clipboard.');
+    });
+  });
+}
+
+function renderObservatory(){
+  document.getElementById('obsArtistName').textContent=S.profile.name||'Wandering Artist';
+  const m=totalMastery();
+  document.getElementById('obsRankNum').textContent=m;
+  document.getElementById('obsTitle').textContent=rankTitle(m);
+  document.getElementById('obsBuilds').textContent=pathsWalked();
+  document.getElementById('obsTop').textContent=highestPath();
+  document.getElementById('obsEx').textContent=S.done.length;
+
+  const lib=document.getElementById('libGrid');
+  if(!lib.dataset.built){
+    lib.innerHTML=LIBRARY.map(l=>
+      `<a class="lib-card" href="${l.url}" target="_blank" rel="noopener">
+        <div class="lc-tag">${l.tag}</div><div class="lc-name">${l.name}</div>
+        <div class="lc-desc">${l.desc}</div></a>`).join('');
+    lib.dataset.built='1';
+  }
+  renderLibrary();
+}
+
+/* ---- Chromatology controls ---- */
+(function(){
+  const pick=document.getElementById('chromaPick');
+  const file=document.getElementById('chromaFile');
+  const numEl=document.getElementById('chromaNum');
+  if(!pick) return;
+  function syncCount(){ numEl.textContent=CHROMA.count; }
+  document.getElementById('chromaMinus').addEventListener('click',()=>{
+    CHROMA.count=Math.max(4,CHROMA.count-1); syncCount();
+    if(CHROMA.img) chromaRender();
+  });
+  document.getElementById('chromaPlus').addEventListener('click',()=>{
+    CHROMA.count=Math.min(16,CHROMA.count+1); syncCount();
+    if(CHROMA.img) chromaRender();
+  });
+  pick.addEventListener('click',()=>file.click());
+  file.addEventListener('change',e=>{
+    const f=e.target.files&&e.target.files[0];
+    if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        CHROMA.img=img;
+        chromaRender();
+      };
+      img.onerror=()=>toast(icon('mood'),'Could not load','That image could not be read.');
+      img.src=r.result;
+    };
+    r.readAsDataURL(f);
+    file.value='';
+  });
+  /* save extracted palette to the Library */
+  const saveBtn=document.getElementById('chromaSaveBtn');
+  if(saveBtn){
+    saveBtn.addEventListener('click',()=>{
+      if(!CHROMA.lastColors||!CHROMA.lastColors.length){
+        toast(icon('mood'),'Nothing to save','Extract a palette from an image first.');
+        return;
+      }
+      const title=(document.getElementById('chromaTitle').value||'').trim();
+      const note=(document.getElementById('chromaNote').value||'').trim();
+      addToLibrary({
+        source:'image',
+        title:title,
+        note:note,
+        colors:CHROMA.lastColors.slice()
+      });
+      document.getElementById('chromaTitle').value='';
+      document.getElementById('chromaNote').value='';
+      toast(icon('check'),'Saved to library',(title||'Palette')+' is in your Palette Library.');
+    });
+  }
+})();
+
+/* ---- Audiochroma — live sound divination ----
+   Reads the mic's frequency spectrum in real time and answers in
+   colour. No API, no network, pure Web Audio, fully offline. */
+(function(){
+  const listenBtn=document.getElementById('acListen');
+  if(!listenBtn) return;
+  const statusEl=document.getElementById('acStatus');
+  const swWrap=document.getElementById('acSwatches');
+  const eEl=document.getElementById('acEnergy');
+  const gEl=document.getElementById('acGroove');
+  const cEl=document.getElementById('acChill');
+  const artistInp=document.getElementById('acArtist');
+  const songInp=document.getElementById('acSong');
+  const jpegBtn=document.getElementById('acJpeg');
+  const saveBtn=document.getElementById('acSave');
+  const histWrap=document.getElementById('acHistory');
+
+  const SWATCH_COUNT=8;
+  /* build the 8 reactive swatch cells */
+  for(let i=0;i<SWATCH_COUNT;i++){
+    const d=document.createElement('div');
+    d.className='ac-swatch'; d.style.background='var(--void)';
+    swWrap.appendChild(d);
+  }
+  const cells=[...swWrap.querySelectorAll('.ac-swatch')];
+
+  /* ---- generative palette engine ----
+     The mic's frequency spectrum composes the palette directly.
+     A "spell-hue" base is seeded from the balance of bass / mid /
+     treble, then eight swatches are spun out around the wheel with
+     hue jumps, saturation, and lightness all driven by live audio.
+     No presets, every session, every moment, is unscripted. */
+
+  function hsl(h,s,l){
+    h=((h%360)+360)%360; s=Math.max(0,Math.min(100,s)); l=Math.max(0,Math.min(100,l));
+    s/=100; l/=100;
+    const k=n=>(n+h/30)%12;
+    const a=s*Math.min(l,1-l);
+    const f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));
+    const to=x=>Math.round(x*255).toString(16).padStart(2,'0');
+    return '#'+to(f(0))+to(f(8))+to(f(4));
+  }
+
+  /* ---- COSMIC PALETTE ENGINE ----
+     Inspired by NASA imagery, nebulae, supernovae, black holes,
+     magnetars, planetary atmospheres, icy moons, galactic cores.
+     Each archetype is a recognisable cosmic look defined by its
+     hue ranges, base lightness, and signature accents. The live
+     audio chooses among them and randomness mutates within them,
+     so a single archetype yields thousands of unique palettes.   */
+
+  /* seeded pseudo-random — deterministic per (seed,key,index)
+     so the math stays reproducible inside one moment of audio */
+  function rnd(seed,key,i){
+    const v=Math.sin((seed*97.13)+(key*53.7)+(i*131.9))*43758.5453;
+    return v-Math.floor(v);
+  }
+  /* pick a value inside a [min,max] range using rnd */
+  function range(seed,key,i,min,max){
+    return min+rnd(seed,key,i)*(max-min);
+  }
+  /* pick one entry from an array of ranges (each [min,max]) */
+  function pickRange(seed,key,i,ranges){
+    return ranges[Math.floor(rnd(seed,key,i)*ranges.length)];
+  }
+
+  /* The cosmic archetypes. Each has:
+       hues:   list of [hueMin, hueMax] bands the swatches draw from
+       sat:    [satMin, satMax] saturation range
+       lit:    [litMin, litMax] base lightness range
+       accent: [hueMin, hueMax] for ~1 swatch of striking contrast
+       dark:   probability (0-1) of pulling a near-black void swatch
+       bright: probability of pulling a near-white stellar swatch  */
+  const COSMOS=[
+    /* Emission nebula — Eagle, Orion, Lagoon — H-alpha reds, OIII greens */
+    {n:'EMISSION NEBULA',
+      hues:[[340,360],[0,18],[18,40],[180,210],[260,290],[140,175]],
+      sat:[60,95], lit:[20,68], accent:[40,55], dark:0.45, bright:0.15},
+    /* Reflection nebula — Pleiades blue dust scattering starlight */
+    {n:'REFLECTION NEBULA',
+      hues:[[200,230],[215,245],[230,260]],
+      sat:[55,90], lit:[28,72], accent:[40,60], dark:0.55, bright:0.25},
+    /* Planetary nebula — Ring, Helix, Cat's Eye — teal, OIII green, magenta */
+    {n:'PLANETARY NEBULA',
+      hues:[[160,195],[290,330],[180,210],[130,165]],
+      sat:[70,100], lit:[30,70], accent:[40,70], dark:0.5, bright:0.2},
+    /* Supernova remnant — Crab, Cassiopeia A — shock-fronts & X-ray ions */
+    {n:'SUPERNOVA REMNANT',
+      hues:[[20,50],[180,210],[280,320],[120,160]],
+      sat:[65,100], lit:[22,72], accent:[350,360], dark:0.4, bright:0.2},
+    /* Black hole accretion disk — golds, oranges, deep-red shifts, void */
+    {n:'ACCRETION DISK',
+      hues:[[20,45],[5,25],[40,60],[350,10]],
+      sat:[75,100], lit:[18,72], accent:[200,230], dark:0.7, bright:0.15},
+    /* Magnetar — violent magnetic fields rendered in violet & cyan */
+    {n:'MAGNETAR FIELD',
+      hues:[[260,290],[290,320],[180,210]],
+      sat:[80,100], lit:[24,68], accent:[40,60], dark:0.55, bright:0.2},
+    /* Galaxy core — Andromeda, Sombrero — warm core, cool arms, dark dust */
+    {n:'GALACTIC CORE',
+      hues:[[30,55],[210,240],[20,40],[250,280]],
+      sat:[50,90], lit:[22,68], accent:[330,350], dark:0.55, bright:0.25},
+    /* Gas giant atmosphere — Jupiter bands & cloud belts */
+    {n:'GAS GIANT BANDS',
+      hues:[[25,42],[10,28],[35,55],[200,220]],
+      sat:[45,85], lit:[28,72], accent:[170,200], dark:0.3, bright:0.25},
+    /* Saturn rings — cream, dusk, soft golds with shadow */
+    {n:'RING SYSTEM',
+      hues:[[35,55],[20,40],[200,230]],
+      sat:[30,70], lit:[35,80], accent:[10,25], dark:0.35, bright:0.3},
+    /* Icy moon — Europa, Enceladus — fissured ice, deep cracks */
+    {n:'ICY MOON',
+      hues:[[180,210],[200,230],[170,200]],
+      sat:[20,65], lit:[40,85], accent:[10,30], dark:0.3, bright:0.4},
+    /* Mars-like world — rust, ochre, dusty pinks */
+    {n:'RUST WORLD',
+      hues:[[10,30],[20,45],[350,15]],
+      sat:[40,85], lit:[28,68], accent:[180,210], dark:0.35, bright:0.2},
+    /* Quasar / active galactic nucleus — searing jet blues, plasma */
+    {n:'QUASAR JET',
+      hues:[[200,225],[180,210],[270,300]],
+      sat:[80,100], lit:[28,75], accent:[40,60], dark:0.55, bright:0.3},
+    /* Pulsar wind nebula — Crab pulsar, energetic blue-white synchrotron */
+    {n:'PULSAR NEBULA',
+      hues:[[200,235],[260,290],[180,210]],
+      sat:[65,95], lit:[35,82], accent:[30,55], dark:0.4, bright:0.4},
+    /* Cosmic void / dark anomaly — deep field, dark matter regions */
+    {n:'DEEP FIELD',
+      hues:[[230,260],[260,290],[200,230]],
+      sat:[35,80], lit:[14,55], accent:[40,60], dark:0.75, bright:0.2},
+    /* Aurora — auroral arcs in giant atmospheres */
+    {n:'AURORAL ARC',
+      hues:[[120,160],[160,195],[280,320]],
+      sat:[60,95], lit:[30,72], accent:[330,360], dark:0.45, bright:0.25},
+    /* Stellar nursery — protostars in dust pillars, warm + cool together */
+    {n:'STELLAR NURSERY',
+      hues:[[15,40],[200,230],[280,310],[140,170]],
+      sat:[55,95], lit:[26,70], accent:[40,60], dark:0.45, bright:0.25}
+  ];
+
+  /* build an 8-colour palette from live audio metrics.
+     bass / mid / treble: 0-100, chooses archetype.
+     flux & seed: randomness within the archetype. */
+  function composePalette(bass,mid,treble,flux,seed){
+    /* archetype selection biased by sonic character:
+         heavy bass -> warmer/violent (accretion disk, supernova, rust)
+         bright treble -> cooler/icy (icy moon, quasar, pulsar)
+         balanced & busy -> nebulae, galaxy, stellar nursery
+       plus a strong random factor so the same audio can land in
+       different cosmoses on different listens.                    */
+    const r=rnd(seed,0,0);
+    let pool;
+    if(bass>treble+15 && r>0.25){
+      pool=[3,4,7,10,5,0];                /* warm / violent */
+    }else if(treble>bass+15 && r>0.25){
+      pool=[1,9,11,12,14,2];               /* cool / icy / luminous */
+    }else if(flux>0.45 || mid>60){
+      pool=[0,2,6,14,15,12,11];            /* busy / nebular */
+    }else if((bass+mid+treble)/3<20){
+      pool=[13,9,1,8,6];                   /* quiet / void / pale */
+    }else{
+      pool=[0,1,2,3,5,6,7,9,11,12,14,15];  /* mixed */
+    }
+    /* the seed itself randomises which entry from the pool wins */
+    let archIdx=pool[Math.floor(rnd(seed,1,0)*pool.length)];
+    /* small (~1-2%) bias toward the three green-bearing archetypes —
+       SUPERNOVA REMNANT (3), AURORAL ARC (14), STELLAR NURSERY (15) 
+       only triggered if the audio character already fits them, so
+       greens become slightly more present without ever dominating */
+    if(rnd(seed,18,0)<0.02){
+      const green=[3,14,15];
+      archIdx=green[Math.floor(rnd(seed,19,0)*green.length)];
+    }
+    const arch=COSMOS[archIdx];
+
+    /* pick the 8 colours within the archetype */
+    const out=[];
+    const energy=(bass+mid+treble)/3;
+    /* live audio biases satuation & lightness a touch */
+    /* live audio biases — strengthened so colour visibly responds.
+       satBias: energy & flux saturate the palette
+       litBias: treble brightens, bass darkens
+       hueBias: bass pulls warm, treble pulls cool (a real hue push) */
+    const satBias=(energy-50)*0.32 + (flux-0.3)*36;
+    const litBias=(treble-50)*0.28 - (bass-50)*0.18;
+    const hueBias=(treble-bass)*0.7;
+
+    for(let i=0;i<8;i++){
+      /* a coin flip per swatch: dark void / bright star / archetype hue */
+      const roll=rnd(seed,2,i);
+      let hex;
+      if(roll<arch.dark){
+        /* deep void swatch — keeps the cosmos feeling vast */
+        const h=range(seed,3,i,220,280);
+        const s=range(seed,4,i,10,40);
+        const l=range(seed,5,i,3,14);
+        hex=hsl(h,s,l);
+      }else if(roll>1-arch.bright){
+        /* hot stellar / ionised swatch */
+        const h=range(seed,6,i,arch.accent[0],arch.accent[1]);
+        const s=range(seed,7,i,30,80);
+        const l=range(seed,8,i,80,96);
+        hex=hsl(h,s,l);
+      }else{
+        /* an archetype hue, mutated by audio + seed */
+        const band=pickRange(seed,9,i,arch.hues);
+        let h=range(seed,10,i,band[0],band[1])
+              + (rnd(seed,11,i)-0.5)*16          /* jitter inside band */
+              + hueBias;                          /* audio steers warm/cool */
+        let s=range(seed,12,i,arch.sat[0],arch.sat[1])+satBias
+              + (rnd(seed,13,i)-0.5)*14;
+        let l=range(seed,14,i,arch.lit[0],arch.lit[1])+litBias
+              + (rnd(seed,15,i)-0.5)*18;
+        /* 1-in-7 chance: pull this swatch to the contrast accent */
+        if(rnd(seed,16,i)>0.86){
+          h=range(seed,17,i,arch.accent[0],arch.accent[1]);
+          s+=10;
+        }
+        hex=hsl(h,s,l);
+      }
+      out.push(hex);
+    }
+    /* expose archetype name for debug / future labelling */
+    out._archetype=arch.n;
+    return out;
+  }
+
+  let ctx=null,analyser=null,data=null,raf=0,listening=false,stream=null;
+  let current={name:'',colors:[]};
+  let sessionSeed=Math.random()*6.283;   /* fresh per listen */
+  let prevEnergy=0, frame=0, lastPaintFrame=-99;
+  let quietShown=false, soundShown=false;  /* silence-gate status flags */
+
+  function paint(cols){
+    for(let i=0;i<8&&i<cols.length;i++) cells[i].style.background=cols[i];
+    current={name:'',colors:cols.slice()};
+  }
+
+  function loop(){
+    if(!listening) return;
+    raf=requestAnimationFrame(loop);
+    analyser.getByteFrequencyData(data);
+    let bassR=0,midR=0,trebR=0;
+    for(let i=0;i<=4;i++)   bassR+=data[i];
+    for(let i=5;i<=25;i++)  midR+=data[i];
+    for(let i=26;i<=60;i++) trebR+=data[i];
+    const energy=Math.min(100,Math.floor((bassR/5)/2.55));
+    const groove=Math.min(100,Math.floor((midR/21)/2.55));
+    const chill =Math.min(100,Math.floor((trebR/35)/2.55));
+    eEl.textContent=energy+'%';
+    gEl.textContent=groove+'%';
+    cEl.textContent=chill+'%';
+
+    /* overall loudness right now (0-100) */
+    const level=(energy+groove+chill)/3;
+    /* SILENCE GATE: below this floor we treat it as quiet and the
+       palette HOLDS still. the colours only move when real sound
+       is present, so a silent room stays calm instead of churning. */
+    const SILENCE=6;
+    if(level<SILENCE){
+      /* quiet — let everything settle, paint nothing */
+      prevEnergy=level;
+      if(!quietShown){
+        statusEl.textContent='Listening… waiting for sound.';
+        quietShown=true; soundShown=false;
+      }
+      return;
+    }
+    if(!soundShown){
+      statusEl.textContent='Reading the music… colour follows the sound.';
+      soundShown=true; quietShown=false;
+    }
+
+    /* flux = how much the overall energy is changing right now */
+    const flux=Math.min(1,Math.abs(level-prevEnergy)/22);
+    prevEnergy=level;
+    /* repaint speed scales with how loud/busy it is: louder sound
+       repaints faster, quiet-but-present sound moves gently. plus an
+       instant repaint on a flux spike (a beat, a drop). */
+    const cadence=level>55?5:(level>25?8:13);
+    frame++;
+    if(frame-lastPaintFrame>cadence || flux>0.4){
+      lastPaintFrame=frame;
+      /* the seed mostly HOLDS so the same song stays in the same
+         territory. it only drifts noticeably on real audio motion. */
+      sessionSeed+=0.002+flux*0.09;
+      paint(composePalette(energy,groove,chill,flux,sessionSeed));
+    }
+  }
+
+  async function start(){
+    if(!navigator.mediaDevices||!(window.AudioContext||window.webkitAudioContext)){
+      statusEl.textContent='This browser can\u2019t analyse audio.';
+      return;
+    }
+    try{
+      stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+    }catch(e){
+      statusEl.textContent='Microphone blocked, allow access to listen.';
+      toast(icon('conjure'),'Microphone blocked','Allow mic access to let the grimoire listen.');
+      return;
+    }
+    ctx=new (window.AudioContext||window.webkitAudioContext)();
+    /* iOS Safari suspends the context until a gesture resumes it */
+    if(ctx.state==='suspended'){ try{ await ctx.resume(); }catch(e){} }
+    const src=ctx.createMediaStreamSource(stream);
+    analyser=ctx.createAnalyser();
+    analyser.fftSize=256;
+    analyser.smoothingTimeConstant=0.85;
+    data=new Uint8Array(analyser.frequencyBinCount);
+    src.connect(analyser);
+    listening=true;
+    /* fresh seed every session — no two listens alike */
+    sessionSeed=Math.random()*6.283;
+    prevEnergy=0; frame=0; lastPaintFrame=-99;
+    quietShown=false; soundShown=false;
+    listenBtn.classList.add('recording');
+    listenBtn.innerHTML=icon('conjure')+' Listening, Tap to Stop';
+    statusEl.textContent='Divining the soundscape\u2026 play music nearby.';
+    saveBtn.disabled=false; jpegBtn.disabled=false;
+    loop();
+  }
+  function stop(){
+    listening=false;
+    if(raf) cancelAnimationFrame(raf);
+    if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+    if(ctx){ try{ ctx.close(); }catch(e){} ctx=null; }
+    listenBtn.classList.remove('recording');
+    listenBtn.innerHTML=icon('conjure')+' Begin Listening';
+    statusEl.textContent='Stopped. Tap to listen again.';
+  }
+  listenBtn.addEventListener('click',()=>{ listening?stop():start(); });
+
+  /* ---- saved palettes: artist + song + colours ---- */
+  saveBtn.addEventListener('click',()=>{
+    if(!current.colors.length) return;
+    const artist=(artistInp.value||'').trim();
+    const song=(songInp.value||'').trim();
+    addToLibrary({
+      source:'sound',
+      title:song.slice(0,60),
+      sub:artist.slice(0,60),
+      colors:current.colors.slice()
+    });
+    artistInp.value=''; songInp.value='';
+    toast(icon('check'),'Saved to library',
+      (song||artist||'Palette')+' is in your Palette Library.');
+  });
+  jpegBtn.addEventListener('click',()=>{
+    if(!current.colors.length) return;
+    window.exportPaletteJPEG(current.colors,
+      (artistInp.value||'').trim(),(songInp.value||'').trim());
+  });
+
+  /* ---- render the palette to a JPEG and hand it to the user ----
+     iOS Safari blocks programmatic downloads, so the finished image
+     is shown in an overlay for press-and-hold "Save to Photos";
+     desktop also gets a direct download link.
+     Exposed globally so the Palette Library can re-export entries. */
+  window.exportPaletteJPEG=function(colors,artist,song){
+    const W=1200, H=1500;
+    const cv=document.createElement('canvas');
+    cv.width=W; cv.height=H;
+    const x=cv.getContext('2d');
+    /* dark grimoire ground */
+    x.fillStyle='#0d0a07'; x.fillRect(0,0,W,H);
+    /* title block */
+    const a=(artist||'').trim(), s=(song||'').trim();
+    x.textAlign='center';
+    x.fillStyle='#e8c46f';
+    x.font="600 60px 'Cinzel', Georgia, serif";
+    x.fillText((s||'Untitled').slice(0,28),W/2,150);
+    if(a){
+      x.fillStyle='#9a8f7a';
+      x.font="italic 38px 'EB Garamond', Georgia, serif";
+      x.fillText(a.slice(0,34),W/2,210);
+    }
+    /* the eight colour bands */
+    const top=270, bandH=Math.floor((H-top-150)/colors.length);
+    colors.forEach((c,i)=>{
+      const y=top+i*bandH;
+      x.fillStyle=c; x.fillRect(90,y,W-180,bandH);
+      /* hex label, readable against the swatch */
+      const rgb=parseInt(c.slice(1),16);
+      const lum=(((rgb>>16)&255)*0.299+((rgb>>8)&255)*0.587+(rgb&255)*0.114);
+      x.fillStyle=lum>140?'#1a1206':'#f3e6c8';
+      x.textAlign='left';
+      x.font="500 34px 'DM Mono', monospace";
+      x.fillText(c.toUpperCase(),130,y+bandH/2+12);
+    });
+    /* footer mark */
+    x.textAlign='center';
+    x.fillStyle='#6b6453';
+    x.font="500 26px 'DM Mono', monospace";
+    x.fillText('AETHER NEXUS \u00b7 AUDIOCHROMA',W/2,H-80);
+    /* hand it over */
+    let url;
+    try{ url=cv.toDataURL('image/jpeg',0.92); }
+    catch(e){ toast(icon('conjure'),'Export failed','Could not render the image.'); return; }
+    const fname=((s||a||'palette').replace(/[^a-z0-9]+/gi,'-').toLowerCase())+'-palette.jpg';
+    let ov=document.getElementById('acJpegOverlay');
+    if(!ov){
+      ov=document.createElement('div');
+      ov.id='acJpegOverlay'; ov.className='mb-export-ov';
+      document.body.appendChild(ov);
+    }
+    ov.innerHTML='<div class="mb-export-card">'
+      +'<button class="mb-export-x" id="acJpegClose">'+icon('trash')+'</button>'
+      +'<div class="mb-export-title">'+esc(s||a||'Your Palette')+'</div>'
+      +'<p class="mb-export-hint">Press and hold the image, then choose '
+      +'<b>Save to Photos</b>. On a computer, use the download button.</p>'
+      +'<img class="mb-export-img" src="'+url+'" alt="palette"/>'
+      +'<a class="mini-btn" id="acJpegDl" href="'+url+'" download="'+fname+'">'
+      +icon('download')+' Download JPEG</a></div>';
+    ov.classList.add('show');
+    document.getElementById('acJpegClose').addEventListener('click',()=>ov.classList.remove('show'));
+    ov.addEventListener('click',e=>{ if(e.target===ov) ov.classList.remove('show'); });
+    toast(icon('download'),'Palette ready','Press and hold the image to save it to your photos.');
+  };
+})();
+
+/* ============================================================
+   THE PALETTE LIBRARY
+   One unified home for every palette, from sound and from image.
+   Entries: {source:'sound'|'image', title, sub, note, colors[]}
+   ============================================================ */
+function addToLibrary(entry){
+  if(!entry||!entry.colors||!entry.colors.length) return;
+  if(!S.library) S.library=[];
+  S.library.unshift({
+    source:entry.source||'image',
+    title:(entry.title||'').slice(0,60),
+    sub:(entry.sub||'').slice(0,60),
+    note:(entry.note||'').slice(0,140),
+    colors:entry.colors.slice(),
+    at:Date.now()
+  });
+  if(S.library.length>120) S.library.pop();
+  save();
+  renderLibrary();
+}
+
+let PL_FILTER='all';
+function renderLibrary(){
+  const list=document.getElementById('plList');
+  if(!list) return;
+  const all=S.library||[];
+  const items=all.filter(e=>PL_FILTER==='all'?true:e.source===PL_FILTER);
+  list.innerHTML='';
+  if(!items.length){
+    const msg = all.length
+      ? 'No '+PL_FILTER+' palettes yet.'
+      : 'Your library is empty. Extract a palette from a photo in Chromatology, or listen to music in Audiochromatic, then save it here.';
+    list.innerHTML='<p class="pl-empty">'+msg+'</p>';
+    return;
+  }
+  items.forEach(entry=>{
+    const realIdx=all.indexOf(entry);
+    list.appendChild(plRow(entry,realIdx));
+  });
+}
+function plRow(entry,idx){
+  const row=document.createElement('div');
+  row.className='ac-hist-row';
+  const strip='<div class="ac-hist-strip">'
+    +entry.colors.map(c=>`<div style="background:${c}"></div>`).join('')+'</div>';
+  const srcIcon = entry.source==='sound' ? icon('conjure') : icon('palette');
+  const title=(entry.title||'').trim();
+  const sub=(entry.sub||'').trim();
+  const note=(entry.note||'').trim();
+  /* sound: sub is artist ; image: sub is unused, note shows below */
+  const subLine = entry.source==='sound'
+    ? (sub?`<span class="ac-hist-artist">${esc(sub)}</span>`:'')
+    : '';
+  const top=`<div class="ac-hist-top">`
+    +`<span class="pl-src" title="${entry.source==='sound'?'From sound':'From image'}">${srcIcon}</span>`
+    +subLine
+    +`<span class="ac-hist-song">${esc(title||(entry.source==='sound'?'Untitled':'Untitled palette'))}</span>`
+    +`</div>`;
+  const noteLine = (entry.source==='image'&&note)
+    ? `<div class="pl-note">${esc(note)}</div>` : '';
+  const bot=`<div class="ac-hist-bot">${strip}`
+    +`<button class="ac-hist-jpeg" title="Save as JPEG">${icon('download')}</button>`
+    +`<button class="ac-hist-del" title="Remove">${icon('trash')}</button>`
+    +`</div>`;
+  row.innerHTML=top+noteLine+bot;
+  row.querySelector('.ac-hist-del').addEventListener('click',()=>{
+    S.library.splice(idx,1); save(); renderLibrary();
+  });
+  const doJpeg=()=>{
+    const a = entry.source==='sound' ? sub : note;
+    window.exportPaletteJPEG(entry.colors, a, title);
+  };
+  row.querySelector('.ac-hist-jpeg').addEventListener('click',doJpeg);
+  row.querySelector('.ac-hist-strip').addEventListener('click',doJpeg);
+  return row;
+}
+/* filter tabs */
+(function(){
+  const wrap=document.getElementById('plFilters');
+  if(!wrap) return;
+  wrap.querySelectorAll('.pl-filter').forEach(b=>{
+    b.addEventListener('click',()=>{
+      wrap.querySelectorAll('.pl-filter').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      PL_FILTER=b.dataset.src;
+      renderLibrary();
+    });
+  });
+})();
+
+/* ---- API key vault ----
+   Keys live in localStorage only, never in the source, so a public
+   GitHub repo never carries them. Each user brings their own key;
+   that keeps it safe-ish, since they only ever expose their own. */
+const API_KEYS={
+  get audd(){ try{return localStorage.getItem('ag_key_audd')||'';}catch(e){return '';} },
+  get lastfm(){ try{return localStorage.getItem('ag_key_lfm')||'';}catch(e){return '';} }
+};
+(function(){
+  const btn=document.getElementById('audKeyBtn');
+  const modal=document.getElementById('keyModal');
+  if(!btn||!modal) return;
+  const auddIn=document.getElementById('auddKeyInput');
+  const lfmIn=document.getElementById('lfmKeyInput');
+  function mask(k){ return k.length>8?k.slice(0,4)+'…'+k.slice(-4):k; }
+  function refresh(){
+    const a=API_KEYS.audd, l=API_KEYS.lastfm;
+    document.getElementById('auddSaved').textContent=a?'✓ Saved, '+mask(a):'';
+    document.getElementById('lfmSaved').textContent=l?'✓ Saved, '+mask(l):'';
+    auddIn.value=a; lfmIn.value=l;
+  }
+  btn.addEventListener('click',()=>{ refresh(); modal.classList.add('show'); });
+  document.getElementById('keyClose').addEventListener('click',()=>modal.classList.remove('show'));
+  modal.addEventListener('click',e=>{ if(e.target===modal) modal.classList.remove('show'); });
+  document.getElementById('keySave').addEventListener('click',()=>{
+    try{
+      localStorage.setItem('ag_key_audd',auddIn.value.trim());
+      localStorage.setItem('ag_key_lfm',lfmIn.value.trim());
+    }catch(e){}
+    refresh();
+    toast(icon('check'),'Keys saved','Stored on this device only.');
+  });
+  document.getElementById('keyClear').addEventListener('click',()=>{
+    try{
+      localStorage.removeItem('ag_key_audd');
+      localStorage.removeItem('ag_key_lfm');
+    }catch(e){}
+    refresh();
+    toast(icon('trash'),'Keys removed','Cleared from this device.');
+  });
+})();
+
+/* =========================================================
+   ATELIER
+   ========================================================= */
+function renderAtelier(){
+  document.getElementById('atelier-grid-view').style.display='block';
+  document.getElementById('build-detail').classList.remove('active');
+  const grid=document.getElementById('buildGrid');
+  grid.innerHTML=BUILDS.map(b=>{
+    const inf=levelInfo(S.builds[b.id].xp);
+    const patron=S.patron===b.id;
+    return `<button class="build-card${patron?' patron':''}" data-build="${b.id}" style="--bc:${b.bc}">
+      ${patron?'<div class="patron-badge">PATRON PATH</div>':''}
+      <div class="bc-glyph">${sigil(b.id)}</div>
+      <div class="bc-fant">${b.title}</div>
+      <div class="bc-disc">${b.disc}</div>
+      <div class="bc-lvl-row">
+        <div class="bc-lvl">${inf.level}<small> / 99</small></div>
+        <div class="bc-bar"><i style="width:${(inf.pct*100).toFixed(0)}%"></i></div>
+      </div></button>`;
+  }).join('');
+  grid.querySelectorAll('.build-card').forEach(c=>{
+    c.addEventListener('click',()=>openBuild(c.dataset.build));
+  });
+  const advUnlocked=BUILDS.some(b=>buildLevel(b.id)>=40);
+  if(advUnlocked) S.flags.advanced=true;
+  const adv=document.getElementById('advSection');
+  if(advUnlocked){
+    adv.innerHTML=`<div class="adv-grid">`+ADVANCED.map(a=>
+      `<div class="adv-card" style="--bc:${a.bc}">
+        <div class="av-name">${icon('atelier')} ${a.name}</div>
+        <div class="av-fuse">${a.fuse}</div>
+        <div class="av-desc">${a.desc}</div></div>`).join('')+`</div>`;
+  }else{
+    adv.innerHTML=`<div class="adv-locked"><div class="lock-gl">🔒</div>
+      <p>Carry any single Path to <b style="color:var(--gold-bright)">Level 40</b>
+      to unlock the six hybrid disciplines: where two crafts fuse into one.</p></div>`;
+  }
+}
+function openBuild(id){
+  document.getElementById('atelier-grid-view').style.display='none';
+  document.getElementById('build-detail').classList.add('active');
+  renderBuildDetail(BUILD_MAP[id]);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('bdBack').addEventListener('click',()=>{
+  document.getElementById('build-detail').classList.remove('active');
+  renderAtelier();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+function renderBuildDetail(b){
+  const inf=levelInfo(S.builds[b.id].xp);
+  const patron=S.patron===b.id;
+  const treeHTML=b.nodes.map(n=>{
+    const lit=inf.level>=n.lvl;
+    const next=!lit && b.nodes.filter(x=>x.lvl>inf.level).sort((a,c)=>a.lvl-c.lvl)[0]===n;
+    return `<div class="tree-node${lit?' lit':''}${next?' next':''}">
+      <div class="node-orb">${lit?sigil(b.id):(next?'<span class="node-pip next"></span>':'<span class="node-pip"></span>')}</div>
+      <div class="node-body">
+        <div class="node-name">${n.name}</div>
+        <div class="node-meta">${lit?icon('check')+' Studied':icon('lock')+' Lv. '+n.lvl}</div>
+        <div class="node-desc">${n.desc}</div>
+      </div></div>`;
+  }).join('');
+  const lvl=inf.level;
+  const active=ritesActive(b.id);
+  const activeHTML=active.map(r=>{
+    const locked=r.t>lvl;
+    return `<div class="ex-item${locked?' locked':''}">
+      <div class="ex-top">
+        <span class="ex-type ${r.type}">${r.type}</span>
+        <span class="ex-name">${r.name}</span>
+        <span class="ex-xp">+${r.xp} XP</span>
+      </div>
+      <div class="ex-desc">${r.desc}</div>
+      <div class="ex-act">
+        ${locked
+          ? `<span class="ex-lock-tag">${icon('lock')} Unlocks at Lv. ${r.t}</span>`
+          : `<button class="ex-btn do" data-rite="${r.idx}" data-build="${b.id}">${icon('check')} Complete</button>`}
+      </div></div>`;
+  }).join('');
+  const archive=ritesArchive(b.id);
+  const archHTML=archive.length?archive.slice().reverse().map(r=>{
+    const fav=riteIsFav(b.id,r.idx);
+    return `<div class="arch-item${fav?' fav':''}">
+      <div class="arch-top">
+        <span class="ex-type ${r.type}">${r.type}</span>
+        <span class="arch-name">${r.name}</span>
+      </div>
+      <div class="arch-desc">${r.desc}</div>
+      <div class="arch-act">
+        <button class="arch-btn fav-btn" data-rite="${r.idx}" data-build="${b.id}" title="${fav?'Favorited':'Mark as favorite'}">${icon('spark')} ${fav?'Favorited':'Favorite'}</button>
+        <button class="arch-btn redo-btn" data-rite="${r.idx}" data-build="${b.id}">Redo · +${Math.round(r.xp*0.8)} XP</button>
+      </div></div>`;
+  }).join(''):`<div class="arch-empty">No rites archived yet. Complete an active rite and it will be kept here.</div>`;
+  document.getElementById('bdContent').innerHTML=`
+   <div class="bd-hero" style="--bc:${b.bc}">
+     <div class="bd-emblem">${sigil(b.id)}</div>
+     <div class="bd-htext">
+       <div class="bd-disc">${b.disc}</div>
+       <h2>${b.title}</h2>
+       <div class="bd-blurb">${b.blurb}</div>
+     </div>
+     <div class="bd-lvlbox"><div class="lvnum">${inf.level}</div><div class="lvcap">of 99</div></div>
+   </div>
+   <div class="bd-xpbar"><i style="width:${(inf.pct*100).toFixed(1)}%"></i></div>
+   <div class="bd-xptext">
+     <span>${inf.level<99?'XP to next rank':'Maximum mastery reached'}</span>
+     <span>${inf.level<99?inf.into+' / '+inf.need:'★ ASCENDANT ★'}</span>
+   </div>
+   <button class="mini-btn ${patron?'':'alt'} patron-set" id="patronBtn">
+     ${patron?'★ Patron Path, Active':'☆ Set as Patron Path'}</button>
+   ${patron?'<p style="font-size:12.5px;color:var(--parch-dim);margin-top:7px;font-style:italic">Rites performed on other Paths now feed 15% of their XP here.</p>':''}
+   <div class="bd-cols">
+     <div class="panel">
+       <div class="panel-title"><span class="gl">${icon('tree')}</span> Skill Tree</div>
+       <p style="font-size:13px;color:var(--parch-dim);margin-bottom:14px">Nodes awaken steadily as your level climbs. Reach Lv. 40 to stir the Advanced Paths.</p>
+       <div class="tree">${treeHTML}</div>
+     </div>
+     <div class="panel">
+       <div class="panel-title"><span class="gl">${icon('rite')}</span> Rites of Practice</div>
+       <p style="font-size:13px;color:var(--parch-dim);margin-bottom:14px">Four rites stand open, take them in any order you like. Complete one and a fresh rite is drawn from the deeper pool; the difficulty climbs as you rise.</p>
+       <div class="ex-list">${activeHTML}</div>
+       <button class="arch-toggle" id="archToggle">${icon('library')} The Archive · ${archive.length} kept</button>
+       <div class="arch-list" id="archList" style="display:none">${archHTML}</div>
+     </div>
+   </div>`;
+  document.getElementById('patronBtn').addEventListener('click',()=>{
+    S.patron=(S.patron===b.id)?'':b.id; save(); renderBuildDetail(b);
+    if(S.patron===b.id) toast('★','Patron Path set',b.title+' will now grow from all your work.');
+  });
+  const archToggle=document.getElementById('archToggle');
+  if(archToggle){
+    archToggle.addEventListener('click',()=>{
+      const list=document.getElementById('archList');
+      const open=list.style.display!=='none';
+      list.style.display=open?'none':'block';
+      archToggle.classList.toggle('open',!open);
+    });
+  }
+  function grantXP(bid,gain,label,riteName){
+    const before=buildLevel(bid);
+    /* remember whether the archive was open so a re-render keeps it */
+    const _al=document.getElementById('archList');
+    const archWasOpen=_al && _al.style.display!=='none';
+    S.builds[bid].xp+=gain;
+    let patronMsg='';
+    if(S.patron&&S.patron!==bid){
+      const pg=Math.round(gain*0.15);
+      S.builds[S.patron].xp+=pg;
+      patronMsg=' · +'+pg+' to '+BUILD_MAP[S.patron].title;
+    }
+    const after=buildLevel(bid);
+    save(); renderBuildDetail(BUILD_MAP[bid]); renderTopbar();
+    if(archWasOpen){
+      const nl=document.getElementById('archList');
+      const nt=document.getElementById('archToggle');
+      if(nl){ nl.style.display='block'; nt&&nt.classList.add('open'); }
+    }
+    if(after>before){
+      toast(sigil(bid),BUILD_MAP[bid].title+', Level '+after+'!','A new node of the skill tree awakens.');
+      if(before<40&&after>=40){
+        setTimeout(()=>toast(icon('atelier'),'The Advanced Paths stir','Six hybrid disciplines now await in the Atelier.'),900);
+      }
+    }else{
+      toast(icon('rite'),'+'+gain+' XP',(label||riteName)+patronMsg);
+    }
+  }
+  /* Complete — archive the rite, swap in the next */
+  document.querySelectorAll('#bdContent .ex-btn.do').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const bid=btn.dataset.build, idx=parseInt(btn.dataset.rite,10);
+      const rite=RITES[bid][idx];
+      if(!S.builds[bid].completed.includes(idx)) S.builds[bid].completed.push(idx);
+      if(!S.done.includes(bid+'::'+rite.name)) S.done.push(bid+'::'+rite.name);
+      grantXP(bid,rite.xp,'Rite complete, '+rite.name,rite.name);
+    });
+  });
+  /* Redo an archived rite for a lesser share */
+  document.querySelectorAll('#bdContent .redo-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const bid=btn.dataset.build, idx=parseInt(btn.dataset.rite,10);
+      const rite=RITES[bid][idx];
+      grantXP(bid,Math.round(rite.xp*0.8),'Rite revisited, '+rite.name,rite.name);
+    });
+  });
+  /* Favorite toggle */
+  document.querySelectorAll('#bdContent .fav-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const bid=btn.dataset.build, idx=parseInt(btn.dataset.rite,10);
+      const favs=S.builds[bid].favs;
+      const at=favs.indexOf(idx);
+      if(at>=0) favs.splice(at,1); else favs.push(idx);
+      save();
+      const list=document.getElementById('archList');
+      const wasOpen=list&&list.style.display!=='none';
+      renderBuildDetail(BUILD_MAP[bid]);
+      if(wasOpen){
+        const nl=document.getElementById('archList');
+        const nt=document.getElementById('archToggle');
+        if(nl){nl.style.display='block'; nt&&nt.classList.add('open');}
+      }
+    });
+  });
+}
+
+/* =========================================================
+   COMMISSIONS
+   ========================================================= */
+function pocketURL(){ return location.origin+location.pathname+'?pocket=1'; }
+function renderCommissions(){
+  document.getElementById('cfgName').value=S.commerce.name||'';
+  document.getElementById('cfgEmail').value=S.commerce.email||'';
+  document.getElementById('cfgRates').value=S.commerce.rates||'';
+  document.getElementById('cfgTurnaround').value=S.commerce.turnaround||'';
+  document.getElementById('cfgDeposit').value=S.commerce.deposit||'';
+  document.getElementById('cfgTerms').value=S.commerce.terms||'';
+  setStatusPills(S.commerce.status||'open');
+  document.getElementById('pocketLink').value=pocketURL();
+  renderCommList();
+}
+function setStatusPills(st){
+  const o=document.getElementById('stOpen'),c=document.getElementById('stClosed');
+  o.classList.toggle('on',st==='open');
+  c.classList.toggle('on',st==='closed');
+  c.classList.toggle('closed',st==='closed');
+}
+document.getElementById('stOpen').addEventListener('click',()=>{S.commerce.status='open';setStatusPills('open');});
+document.getElementById('stClosed').addEventListener('click',()=>{S.commerce.status='closed';setStatusPills('closed');});
+document.getElementById('cfgSave').addEventListener('click',()=>{
+  S.commerce.name=document.getElementById('cfgName').value.trim();
+  S.commerce.email=document.getElementById('cfgEmail').value.trim();
+  S.commerce.rates=document.getElementById('cfgRates').value.trim();
+  S.commerce.turnaround=document.getElementById('cfgTurnaround').value.trim();
+  S.commerce.deposit=document.getElementById('cfgDeposit').value.trim();
+  S.commerce.terms=document.getElementById('cfgTerms').value.trim();
+  save();
+  toast(icon('check'),'Details saved','Your request page now shows this. Next: copy your link in step 2.');
+});
+document.getElementById('copyPocket').addEventListener('click',()=>{
+  navigator.clipboard&&navigator.clipboard.writeText(pocketURL());
+  toast(icon('link'),'Link copied','Paste it into your Instagram bio, email signature, anywhere clients find you.');
+});
+document.getElementById('previewPocket').addEventListener('click',()=>{
+  window.open(pocketURL(),'_blank');
+});
+function renderCommList(){
+  const wrap=document.getElementById('commListWrap');
+  const list=S.commissions||[];
+  document.getElementById('commCount').textContent=list.length?list.length+' total':'';
+  if(!list.length){
+    wrap.innerHTML=`<div class="empty-state"><div class="es-gl">${icon('commissions')}</div>
+      <p>No requests yet. Once you share your link from step 2, every request a client sends will appear right here.</p></div>`;
+    return;
+  }
+  wrap.innerHTML=`<div class="comm-list">`+list.slice().reverse().map(c=>
+    `<div class="comm-card">
+      <div class="cc-status">${c.status||'NEW'}</div>
+      <div class="cc-name">${esc(c.name)}</div>
+      <div class="cc-meta">${esc(c.email)} · ${c.date}</div>
+      <div class="cc-body">${esc(c.brief)}</div>
+      <div class="cc-tags"><span>${icon('tag')} ${esc(c.type)}</span><span>${icon('coin')} ${esc(c.budget)}</span></div>
+      <div class="cc-actions">
+        <a class="ex-btn do" href="mailto:${esc(c.email)}?subject=${encodeURIComponent('Re: your commission request')}">Reply by Email</a>
+        <button class="ex-btn again" data-del="${c.id}">Dismiss</button>
+      </div></div>`).join('')+`</div>`;
+  wrap.querySelectorAll('[data-del]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      S.commissions=S.commissions.filter(x=>x.id!=btn.dataset.del);
+      save(); renderCommList();
+      toast(icon('trash'),'Request dismissed','');
+    });
+  });
+}
+function esc(s){return String(s||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));}
+
+/* =========================================================
+   POCKET SITE (isolated)
+   ========================================================= */
+function bootPocket(){
+  document.getElementById('landing').style.display='none';
+  document.getElementById('mainapp').style.display='none';
+  document.getElementById('pocket-view').classList.add('active');
+  const c=S.commerce;
+  document.getElementById('pkArtist').textContent=c.name||'The Studio';
+  /* studio terms block — only shows fields the artist filled in */
+  const terms=[
+    ['Rates',c.rates],['Turnaround',c.turnaround],
+    ['Deposit',c.deposit],['Terms & Conditions',c.terms]
+  ].filter(t=>t[1]);
+  const tEl=document.getElementById('pkTerms');
+  if(terms.length){
+    tEl.innerHTML=terms.map(t=>
+      `<div class="pk-term"><span class="pk-term-k">${t[0]}</span>`
+      +`<span class="pk-term-v">${esc(t[1])}</span></div>`).join('');
+  }else{
+    tEl.innerHTML=`<p class="pk-term-empty">Tell me about the work you have in mind.</p>`;
+  }
+  const st=document.getElementById('pkStatus');
+  if((c.status||'open')==='closed'){
+    st.className='ph-status closed'; st.textContent='● Commissions Closed';
+    document.getElementById('pocketForm').innerHTML=
+      `<div class="thanks"><div class="tk-gl">🌙</div>
+       <h3>Commissions are closed</h3>
+       <p>${esc(c.name||'The studio')} is not taking new requests right now. Check back soon.</p></div>`;
+    return;
+  }
+  st.className='ph-status open'; st.textContent='● Open for Work';
+  document.getElementById('rqSubmit').addEventListener('click',()=>{
+    const name=document.getElementById('rqName').value.trim();
+    const email=document.getElementById('rqEmail').value.trim();
+    const type=document.getElementById('rqType').value;
+    const budget=document.getElementById('rqBudget').value;
+    const brief=document.getElementById('rqBrief').value.trim();
+    if(!name||!email||!brief){
+      toast('⚠','Incomplete','Please add your name, email, and a brief.');
+      return;
+    }
+    const req={id:Date.now(),name,email,type,budget,brief,
+      date:new Date().toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}),
+      status:'NEW'};
+    try{
+      const raw=JSON.parse(localStorage.getItem(KEY))||S;
+      raw.commissions=raw.commissions||[];
+      raw.commissions.push(req);
+      localStorage.setItem(KEY,JSON.stringify(raw));
+    }catch(e){}
+    const to=c.email||'';
+    const subject=encodeURIComponent('New Commission Request, '+type);
+    const body=encodeURIComponent('Commission request via Aether Nexus Pocket Site\n\n'+
+      'Name: '+name+'\nEmail: '+email+'\nType: '+type+'\nBudget: '+budget+'\n\nVision:\n'+brief);
+    if(to) window.location.href='mailto:'+to+'?subject='+subject+'&body='+body;
+    document.getElementById('pocketForm').innerHTML=
+      `<div class="thanks"><div class="tk-gl">${icon('check')}</div>
+       <h3>Request sent</h3>
+       <p>Thank you, ${esc(name)}. Your vision has been delivered to
+       ${esc(c.name||'the studio')}${to?', your email client should now be open to send it.':'.'}</p></div>`;
+    toast(icon('commissions'),'Request submitted','The studio has been notified.');
+  });
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+boot();
+if(isPocket()){
+  document.getElementById('landing').style.display='none';
+  bootPocket();
+}
+if(GOOGLE_CLIENT_ID){
+  const gs=document.createElement('script');
+  gs.src='https://accounts.google.com/gsi/client'; gs.async=true; gs.defer=true;
+  document.head.appendChild(gs);
+}
+</script>
+</body>
+</html>
